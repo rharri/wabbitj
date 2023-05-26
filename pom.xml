@@ -10,7 +10,7 @@
   <packaging>jar</packaging>
 
   <name>wabbitj</name>
-  <url>http://www.github.com/rharri/wabbitj</url>
+  <url>https://www.github.com/rharri/wabbitj</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
