@@ -6,18 +6,20 @@ This is not meant to be a full implementation of the language, instead the goal 
 ## Setup
 A JDK installation is required for development and testing. 
 
-JDK version >=17 is required.
+JDK version >= 17 is required.
 
 ```
 $ git clone https://github.com/rharri/wabbitj.git
 
 $ cd wabbitj/
+
+$ ./mvnw package
 ```
 
 ## Usage
 Running a Wabbit program using the interpreter:
 ```
-$ wabbit examples/simple.wb
+$ java -jar target/wabbitj-0.0.1.jar examples/simple.wb
 ```
 
 ## Technologies
