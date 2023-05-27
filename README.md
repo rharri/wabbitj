@@ -1,5 +1,5 @@
 ## Description
-A compiler for the Wabbit language. 
+A compiler for the [Wabbit](https://www.dabeaz.com/compiler.html) language. 
 
 This is not meant to be a full implementation of the language, instead the goal of this project is to explore compiler design and software design in general.
 
