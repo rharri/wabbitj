@@ -14,6 +14,6 @@ public class Main {
         statements.add(print);
         var program = Program.newInstance(statements);
 
-        program.accept(Interpreter.newInstance(JavaRuntime.newInstance()));
+        program.accept(Interpreter.newInstance(JavaRuntime.newInstance(System.out)));
     }
 }

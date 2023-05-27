@@ -1,15 +1,20 @@
 package com.github.rharri.wabbitj;
 
+import java.io.PrintStream;
+
 public class JavaRuntime {
 
-    private JavaRuntime() {
+    private final PrintStream printStream;
+
+    private JavaRuntime(PrintStream printStream) {
+        this.printStream = printStream;
     }
 
-    public static JavaRuntime newInstance() {
-        return new JavaRuntime();
+    public static JavaRuntime newInstance(PrintStream printStream) {
+        return new JavaRuntime(printStream);
     }
 
     public void println(Object object) {
-        System.out.println(object);
+        printStream.println(object);
     }
 }
