@@ -8,13 +8,16 @@ public class Tokenizer {
     private final String programText;
     private final char[] programTextChars;
     private int index;
-    private final int lineNumber;
-    private final int column;
+    private int lineNumber;
+    private int column;
     private final List<Token> tokens;
-    private final int lastNewLineIndex;
+    private int lastNewLineIndex;
     private final Map<String, TokenType> keywords;
 
     private final Predicate<Character> isDigit = Character::isDigit;
+    private final Predicate<Character> isAlpha = Character::isAlphabetic;
+    private final Predicate<Character> isDecimalPoint = ch -> ch == '.';
+    private final Predicate<Character> isFloatingPoint = isDigit.or(isDecimalPoint);
 
     private Tokenizer(String programText) {
         this.programText = programText;
@@ -42,9 +45,9 @@ public class Tokenizer {
     }
 
     private String slice(int startIndex, int endIndex) {
-        if (endIndex > programText.length()) {
+        if (endIndex > programText.length())
             endIndex = programText.length() - 1;
-        }
+
         return programText.substring(startIndex, endIndex);
     }
 
@@ -63,6 +66,11 @@ public class Tokenizer {
     }
 
     private void addToken(TokenType type, int start, String representation) {
+        if (lastNewLineIndex > 0)
+            column = start - lastNewLineIndex;
+        else
+            column = start + 1;
+
         Token token = new Token(type, representation, new Position(lineNumber, column));
         tokens.add(token);
     }
@@ -74,6 +82,7 @@ public class Tokenizer {
     private int find(int start, Predicate<Character> predicate) {
         int endIndex = start;
         int index = start;
+
         while (index < programText.length()) {
             if (predicate.test(programText.charAt(index))) {
                 endIndex += 1;
@@ -85,18 +94,51 @@ public class Tokenizer {
         return endIndex;
     }
 
+    private boolean hasDecimalBefore(int start, String before) {
+        int decimalIndex = programText.indexOf(".", start);
+
+        if (decimalIndex < 0)
+            return false;
+
+        int beforeIndex = programText.indexOf(before, start);
+
+        return decimalIndex < beforeIndex;
+    }
+
     public void tokenize() {
         while (index < programTextChars.length) {
             if (peek("/*")) {
                 FindEndResult endToken = findEnd(index, "*/");
                 addToken(TokenType.COMMENT, endToken.startIndex, endToken.found);
                 index = endToken.endIndex;
-            } else if (tryNext(isDigit)) {
-                FindEndResult integer = findEnd(index, isDigit, this::find);
-                addToken(TokenType.INTEGER, integer.startIndex, integer.found);
-                index = integer.endIndex;
+                lineNumber += endToken.found.chars().filter(ch -> ch == '\n').count();
+            } else if (peek("//")) {
+                FindEndResult endToken = findEnd(index, "\n");
+                String singleLineComment = endToken.found.trim(); // Do not include newline character
+                addToken(TokenType.COMMENT, endToken.startIndex, singleLineComment);
+                index = endToken.endIndex - 1;
+            } else if (tryNext(isAlpha)) {
+                FindEndResult nameOrKeyword = findEnd(index, isAlpha, this::find);
+                TokenType type = keywords.getOrDefault(nameOrKeyword.found, TokenType.NAME);
+                addToken(type, nameOrKeyword.startIndex, nameOrKeyword.found);
+                index = nameOrKeyword.endIndex;
+            } else if (tryNext(isDigit) || peek(".")) {
+                boolean hasDecimal = hasDecimalBefore(index, ";");
+                if (!hasDecimal) {
+                    FindEndResult integer = findEnd(index, isDigit, this::find);
+                    addToken(TokenType.INTEGER, integer.startIndex, integer.found);
+                    index = integer.endIndex;
+                } else {
+                    FindEndResult floatingPoint = findEnd(index, isFloatingPoint, this::find);
+                    addToken(TokenType.FLOAT, floatingPoint.startIndex, floatingPoint.found);
+                    index = floatingPoint.endIndex;
+                }
             } else if (peek(";")) {
                 addToken(TokenType.SEMI, index, ";");
+                index += 1;
+            } else if (peek("\n")) {
+                lineNumber += 1;
+                lastNewLineIndex = index;
                 index += 1;
             } else {
                 index += 1;
