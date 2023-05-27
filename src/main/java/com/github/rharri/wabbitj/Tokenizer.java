@@ -94,15 +94,15 @@ public class Tokenizer {
         return endIndex;
     }
 
-    private boolean hasDecimalBefore(int start, String before) {
+    private boolean isDecimalInExpression(int start) {
         int decimalIndex = programText.indexOf(".", start);
 
         if (decimalIndex < 0)
             return false;
 
-        int beforeIndex = programText.indexOf(before, start);
+        int semicolonIndex = programText.indexOf(";", start);
 
-        return decimalIndex < beforeIndex;
+        return decimalIndex < semicolonIndex;
     }
 
     public void tokenize() {
@@ -123,8 +123,8 @@ public class Tokenizer {
                 addToken(type, nameOrKeyword.startIndex, nameOrKeyword.found);
                 index = nameOrKeyword.endIndex;
             } else if (tryNext(isDigit) || peek(".")) {
-                boolean hasDecimal = hasDecimalBefore(index, ";");
-                if (!hasDecimal) {
+                boolean decimalInExpression = isDecimalInExpression(index);
+                if (!decimalInExpression) {
                     FindEndResult integer = findEnd(index, isDigit, this::find);
                     addToken(TokenType.INTEGER, integer.startIndex, integer.found);
                     index = integer.endIndex;
