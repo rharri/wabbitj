@@ -130,6 +130,7 @@ public class Tokenizer {
                 FindEndResult endToken = findEnd(index, "*/");
                 addToken(TokenType.COMMENT, endToken.startIndex, endToken.found);
                 index = endToken.endIndex;
+                // Handle newlines within multiline comments
                 lineNumber += endToken.found.chars().filter(ch -> ch == '\n').count();
             } else if (peek("//")) {
                 FindEndResult endToken = findEnd(index, "\n");
