@@ -133,8 +133,7 @@ public class Tokenizer {
                 lineNumber += endToken.found.chars().filter(ch -> ch == '\n').count();
             } else if (peek("//")) {
                 FindEndResult endToken = findEnd(index, "\n");
-                String singleLineComment = endToken.found.trim(); // Do not include newline character
-                addToken(TokenType.COMMENT, endToken.startIndex, singleLineComment);
+                addToken(TokenType.COMMENT, endToken.startIndex, endToken.found);
                 index = endToken.endIndex;
             } else if (tryNext(isAlpha)) {
                 FindEndResult nameOrKeyword = findEnd(index, isAlpha, this::find);
