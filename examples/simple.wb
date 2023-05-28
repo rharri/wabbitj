@@ -1,0 +1,5 @@
+/*
+    simple.wb
+*/
+
+print 42; // print 42 to standard out

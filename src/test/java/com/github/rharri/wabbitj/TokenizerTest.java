@@ -42,7 +42,7 @@ public class TokenizerTest {
         var programText = """
                 /*
                     Comment
-                    
+                
                     More comments
                 */
                 
