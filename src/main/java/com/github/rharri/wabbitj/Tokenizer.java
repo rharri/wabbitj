@@ -53,8 +53,27 @@ public class Tokenizer {
 
     private FindEndResult findEnd(int start, String endToken) {
         int endTokenIndex = programText.indexOf(endToken, start);
-        endTokenIndex += endToken.length();
-        return new FindEndResult(start, endTokenIndex, slice(start, endTokenIndex));
+
+        if (endTokenIndex == -1) { // Handle endTokens that do not exist
+            endTokenIndex = programText.length();
+            return new FindEndResult(start, endTokenIndex, slice(start, endTokenIndex));
+        } else {
+            // If the endToken length is greater than 1, add it to the endTokenIndex
+            // to get the index where the token actually ends
+
+            // Example:
+            //
+            // 0123456
+            // /* x */
+            //      ^---- indexOf returns 5
+            //
+            // However, to properly capture the token and continue processing, the index needs to be 6
+            //
+            if (endToken.length() > 1)
+                endTokenIndex += endToken.length();
+
+            return new FindEndResult(start, endTokenIndex, slice(start, endTokenIndex));
+        }
     }
 
     private FindEndResult findEnd(int start,
@@ -116,7 +135,7 @@ public class Tokenizer {
                 FindEndResult endToken = findEnd(index, "\n");
                 String singleLineComment = endToken.found.trim(); // Do not include newline character
                 addToken(TokenType.COMMENT, endToken.startIndex, singleLineComment);
-                index = endToken.endIndex - 1;
+                index = endToken.endIndex;
             } else if (tryNext(isAlpha)) {
                 FindEndResult nameOrKeyword = findEnd(index, isAlpha, this::find);
                 TokenType type = keywords.getOrDefault(nameOrKeyword.found, TokenType.NAME);

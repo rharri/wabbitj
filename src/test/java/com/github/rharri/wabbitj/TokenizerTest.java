@@ -124,4 +124,29 @@ public class TokenizerTest {
 
         assertThat(tokens).containsOnlyOnceElementsOf(expected);
     }
+
+    @Test
+    public void shouldTokenizeSingleLineCommentWithNoNewline() {
+        var print = new Token(TokenType.PRINT, "print", new Position(1, 1));
+        var intLiteral = new Token(TokenType.INTEGER, "42", new Position(1, 7));
+        var semicolon = new Token(TokenType.SEMI, ";", new Position(1, 9));
+        var comment = new Token(TokenType.COMMENT, "// comment", new Position(1, 11));
+        var endOfFile = new Token(TokenType.EOF, "EOF", new Position(1, 21));
+
+        var programText = "print 42; // comment";
+
+        var tokenizer = Tokenizer.newInstance(programText);
+        tokenizer.tokenize();
+        List<Token> tokens = tokenizer.getTokens();
+
+        var expected = List.of(
+                print,
+                intLiteral,
+                semicolon,
+                comment,
+                endOfFile
+        );
+
+        assertThat(tokens).containsOnlyOnceElementsOf(expected);
+    }
 }
