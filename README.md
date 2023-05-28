@@ -20,6 +20,12 @@ $ ./mvnw package
 Running a Wabbit program using the interpreter:
 ```
 $ java -jar target/wabbitj-0.0.1.jar examples/simple.wb
+42
+
+$ java -jar target/wabbitj-0.0.1.jar examples/numbers.wb
+42
+1.5
+0.15
 ```
 
 ## Technologies
