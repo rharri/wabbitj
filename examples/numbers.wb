@@ -1,0 +1,3 @@
+print 42;
+print 1.5;
+print .15;

@@ -40,4 +40,9 @@ public class Interpreter implements NodeVisitor {
     public Optional<Object> visitIntLiteral(IntLiteral intLiteral) {
         return Optional.of(intLiteral.digits());
     }
+
+    @Override
+    public Optional<Object> visitFloatLiteral(FloatLiteral floatLiteral) {
+        return Optional.of(floatLiteral.floatingPointValue());
+    }
 }

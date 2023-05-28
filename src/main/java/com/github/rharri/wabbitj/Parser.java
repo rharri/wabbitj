@@ -56,12 +56,19 @@ public class Parser {
     private Expression parseFactor() {
         if (peek(TokenType.INTEGER))
             return parseIntLiteral();
-        return null;
+        else
+            return parseFloatLiteral();
     }
 
     private Expression parseIntLiteral() {
         Token token = expect(TokenType.INTEGER);
         int digits = Integer.parseInt(token.representation());
         return IntLiteral.newInstance(digits);
+    }
+
+    private Expression parseFloatLiteral() {
+        Token token = expect(TokenType.FLOAT);
+        float floatingPointValue = Float.parseFloat(token.representation());
+        return FloatLiteral.newInstance(floatingPointValue);
     }
 }

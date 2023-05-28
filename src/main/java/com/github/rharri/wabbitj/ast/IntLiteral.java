@@ -23,7 +23,7 @@ public final class IntLiteral implements Expression {
 
     @Override
     public String toString() {
-        return "IntegerLiteral [digits=" + digits + "]";
+        return "IntLiteral [digits=" + digits + "]";
     }
 
     public int digits() {
@@ -42,5 +42,4 @@ public final class IntLiteral implements Expression {
     public int hashCode() {
         return Objects.hash(digits);
     }
-
 }

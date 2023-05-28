@@ -47,4 +47,29 @@ public class ParserTest {
         inOrder.verify(interpreter).visitPrint(Mockito.any());
         inOrder.verify(interpreter).visitIntLiteral(Mockito.any());
     }
+
+    @Test
+    public void shouldParsePrintFloatLiteral() {
+        var print = new Token(TokenType.PRINT, "print", new Position(1, 1));
+        var floatLiteral = new Token(TokenType.FLOAT, "1.5", new Position(1, 7));
+        var semicolon = new Token(TokenType.SEMI, ";", new Position(1, 10));
+        var endOfFile = new Token(TokenType.EOF, "EOF", new Position(1, 11));
+
+        var tokens = List.of(print, floatLiteral, semicolon, endOfFile);
+
+        var parser = Parser.newInstance(tokens);
+        var ast = parser.parse();
+
+        var runtime = runtimeWithoutStandardOut();
+
+        var interpreter = Mockito.spy(Interpreter.newInstance(runtime));
+
+        ast.accept(interpreter);
+
+        InOrder inOrder = inOrder(interpreter);
+        inOrder.verify(interpreter).visitProgram(Mockito.any());
+        inOrder.verify(interpreter).visitStatements(Mockito.any());
+        inOrder.verify(interpreter).visitPrint(Mockito.any());
+        inOrder.verify(interpreter).visitFloatLiteral(Mockito.any());
+    }
 }
