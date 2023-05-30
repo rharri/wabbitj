@@ -8,7 +8,7 @@ import java.util.Deque;
 public class Interpreter implements NodeVisitor {
 
     private final JavaRuntime runtime;
-    private final Deque<WabbitValue<?>> stack = new ArrayDeque<>();
+    private final Deque<WabbitValue> stack = new ArrayDeque<>();
 
     private Interpreter(JavaRuntime runtime) {
         this.runtime = runtime;
@@ -33,34 +33,31 @@ public class Interpreter implements NodeVisitor {
     @Override
     public void visitPrint(Print print) {
         print.expression().accept(this);
-        WabbitValue<?> expression = stack.removeFirst();
-        runtime.println(expression.value());
+        WabbitValue wabbitValue = stack.pop();
+        runtime.println(wabbitValue.javaObject());
     }
 
     @Override
     public void visitIntLiteral(IntLiteral intLiteral) {
-        stack.add(new WabbitValue<>(WabbitType.INT, intLiteral.getValue()));
+        int value = intLiteral.getValue();
+        stack.push(new WabbitValue(WabbitType.INT, value));
     }
 
     @Override
     public void visitFloatLiteral(FloatLiteral floatLiteral) {
-        stack.add(new WabbitValue<>(WabbitType.FLOAT, floatLiteral.getValue()));
+        float value = floatLiteral.getValue();
+        stack.push(new WabbitValue(WabbitType.FLOAT, value));
     }
 
     @Override
-    public void visitSumTerm(SumTerm sumTerm) {
-        sumTerm.getLhs().accept(this);
-        sumTerm.getRhs().accept(this);
+    public void visitBinaryOp(BinaryOp binaryOp) {
+        binaryOp.getLhs().accept(this);
+        binaryOp.getRhs().accept(this);
 
-        WabbitValue<?> lhs = stack.removeFirst();
-        WabbitValue<?> rhs = stack.removeFirst();
+        WabbitValue lhs = stack.pop();
+        WabbitValue rhs = stack.pop();
 
-        if (lhs.value() instanceof Integer && rhs.value() instanceof Integer) {
-            int sum = runtime.sumInteger.apply((int)lhs.value(), (int)rhs.value());
-            stack.add(new WabbitValue<>(WabbitType.INT, sum));
-        } else if (lhs.value() instanceof Float && rhs.value() instanceof Float) {
-            float sum = runtime.sumFloat.apply((float)lhs.value(), (float)rhs.value());
-            stack.add(new WabbitValue<>(WabbitType.INT, sum));
-        }
+        Object result = runtime.binaryOp(binaryOp.getOperator(), lhs.javaObject(), rhs.javaObject());
+        stack.add(new WabbitValue(WabbitType.ANY, result));
     }
 }

@@ -74,7 +74,7 @@ public class ParserTest {
     }
 
     @Test
-    public void shouldParsePrintSumTerm() {
+    public void shouldParsePrintAdditionExpression() {
         var print = new Token(TokenType.PRINT, "print", new Position(1, 1));
         var intLiteral1 = new Token(TokenType.INTEGER, "2", new Position(1, 7));
         var plusOp = new Token(TokenType.PLUS, "+", new Position(1, 9));
@@ -104,7 +104,7 @@ public class ParserTest {
         inOrder.verify(interpreter).visitProgram(Mockito.any());
         inOrder.verify(interpreter).visitStatements(Mockito.any());
         inOrder.verify(interpreter).visitPrint(Mockito.any());
-        inOrder.verify(interpreter).visitSumTerm(Mockito.any());
+        inOrder.verify(interpreter).visitBinaryOp(Mockito.any());
         inOrder.verify(interpreter, times(2)).visitIntLiteral(Mockito.any());
     }
 }

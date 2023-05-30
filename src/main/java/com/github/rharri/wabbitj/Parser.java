@@ -89,7 +89,7 @@ public class Parser {
         Optional<Token> token = tryExpect(TokenType.PLUS);
         if (token.isPresent()) {
             Expression rhs = parseFactor();
-            lhs = SumTerm.newInstance(lhs, rhs);
+            lhs = BinaryOp.newInstance(Operator.PLUS, lhs, rhs);
         }
         return lhs;
     }

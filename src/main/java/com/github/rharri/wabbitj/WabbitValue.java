@@ -1,4 +1,4 @@
 package com.github.rharri.wabbitj;
 
-public record WabbitValue<T>(WabbitType wabbitType, T value) {
+public record WabbitValue(WabbitType wabbitType, Object javaObject) {
 }

@@ -41,11 +41,11 @@ public class InterpreterTest {
     }
 
     @Test
-    public void shouldPrintSumTerm() {
+    public void shouldPrintAdditionExpression() {
         var intLiteral1 = IntLiteral.newInstance(2);
         var intLiteral2 = IntLiteral.newInstance(3);
-        var sumTerm = SumTerm.newInstance(intLiteral1, intLiteral2);
-        var print = Print.newInstance(sumTerm);
+        var binaryOp = BinaryOp.newInstance(Operator.PLUS, intLiteral1, intLiteral2);
+        var print = Print.newInstance(binaryOp);
         var statements = Statements.newInstance();
         statements.add(print);
         var program = Program.newInstance(statements);

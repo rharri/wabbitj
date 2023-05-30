@@ -151,7 +151,7 @@ public class TokenizerTest {
     }
 
     @Test
-    public void shouldTokenizeSumTerm() {
+    public void shouldTokenizeAddition() {
         var print = new Token(TokenType.PRINT, "print", new Position(1, 1));
         var intLiteral1 = new Token(TokenType.INTEGER, "2", new Position(1, 7));
         var plusOp = new Token(TokenType.PLUS, "+", new Position(1, 9));

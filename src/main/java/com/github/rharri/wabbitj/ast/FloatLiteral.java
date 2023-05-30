@@ -3,7 +3,6 @@ package com.github.rharri.wabbitj.ast;
 import com.github.rharri.wabbitj.NodeVisitor;
 
 import java.util.Objects;
-import java.util.Optional;
 
 public class FloatLiteral implements Expression {
     private final float value;
