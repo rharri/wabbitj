@@ -11,7 +11,8 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "wabbitj", mixinStandardHelpOptions = true, version = "wabbitj 0.0.1",
-    description = "Wabbit is a statically typed programming language similar to Go.")
+    description = "Wabbit is a statically typed programming language similar to Go. Wabbit was created by David Beazley." +
+            " Please see https://www.dabeaz.com/compiler.html for more information.")
 public class WabbitJ implements Callable<Integer> {
 
     @CommandLine.Parameters(index = "0", description = "The Wabbit file to execute.")
