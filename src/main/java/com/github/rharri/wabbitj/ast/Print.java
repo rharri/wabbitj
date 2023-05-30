@@ -17,8 +17,8 @@ public final class Print implements Statement {
     }
 
     @Override
-    public Optional<Object> accept(NodeVisitor visitor) {
-        return visitor.visitPrint(this);
+    public void accept(NodeVisitor visitor) {
+        visitor.visitPrint(this);
     }
 
     @Override

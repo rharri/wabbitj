@@ -6,28 +6,28 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class FloatLiteral implements Expression {
-    private final float floatingPointValue;
+    private final float value;
 
-    private FloatLiteral(float floatingPointValue) {
-        this.floatingPointValue = floatingPointValue;
+    private FloatLiteral(float value) {
+        this.value = value;
     }
 
-    public static FloatLiteral newInstance(float floatingPointValue) {
-        return new FloatLiteral(floatingPointValue);
+    public static FloatLiteral newInstance(float value) {
+        return new FloatLiteral(value);
     }
 
     @Override
-    public Optional<Object> accept(NodeVisitor visitor) {
-        return visitor.visitFloatLiteral(this);
+    public void accept(NodeVisitor visitor) {
+        visitor.visitFloatLiteral(this);
     }
 
     @Override
     public String toString() {
-        return "FloatLiteral [floatingPointValue=" + floatingPointValue + "]";
+        return "FloatLiteral [value=" + value + "]";
     }
 
-    public float floatingPointValue() {
-        return floatingPointValue;
+    public float getValue() {
+        return value;
     }
 
     @Override
@@ -35,11 +35,11 @@ public class FloatLiteral implements Expression {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
         var that = (FloatLiteral) obj;
-        return this.floatingPointValue == that.floatingPointValue;
+        return this.value == that.value;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(floatingPointValue);
+        return Objects.hash(value);
     }
 }

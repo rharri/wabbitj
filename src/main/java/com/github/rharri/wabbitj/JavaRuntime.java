@@ -1,6 +1,7 @@
 package com.github.rharri.wabbitj;
 
 import java.io.PrintStream;
+import java.util.function.BinaryOperator;
 
 public class JavaRuntime {
 
@@ -17,4 +18,8 @@ public class JavaRuntime {
     public void println(Object object) {
         printStream.println(object);
     }
+
+    public BinaryOperator<Integer> sumInteger = Integer::sum;
+
+    public BinaryOperator<Float> sumFloat = Float::sum;
 }

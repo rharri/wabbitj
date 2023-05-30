@@ -3,6 +3,7 @@ package com.github.rharri.wabbitj;
 import com.github.rharri.wabbitj.ast.*;
 
 import java.util.List;
+import java.util.Optional;
 
 public class Parser {
 
@@ -23,6 +24,13 @@ public class Parser {
         } else {
             throw new IllegalArgumentException("Expected " + type + "." + " Got " + token.type() + ".");
         }
+    }
+
+    private Optional<Token> tryExpect(TokenType type) {
+        if (peek(type))
+            return Optional.of(expect(type));
+        else
+            return Optional.empty();
     }
 
     private boolean peek(TokenType type) {
@@ -48,7 +56,7 @@ public class Parser {
 
     private Statement parsePrintStatement() {
         expect(TokenType.PRINT);
-        Expression expression = parseFactor();
+        Expression expression = parseExpression();
         expect(TokenType.SEMI);
         return Print.newInstance(expression);
     }
@@ -62,13 +70,27 @@ public class Parser {
 
     private Expression parseIntLiteral() {
         Token token = expect(TokenType.INTEGER);
-        int digits = Integer.parseInt(token.representation());
-        return IntLiteral.newInstance(digits);
+        int value = Integer.parseInt(token.representation());
+        return IntLiteral.newInstance(value);
     }
 
     private Expression parseFloatLiteral() {
         Token token = expect(TokenType.FLOAT);
-        float floatingPointValue = Float.parseFloat(token.representation());
-        return FloatLiteral.newInstance(floatingPointValue);
+        float value = Float.parseFloat(token.representation());
+        return FloatLiteral.newInstance(value);
+    }
+
+    private Expression parseExpression() {
+        return parseSumTerm();
+    }
+
+    private Expression parseSumTerm() {
+        Expression lhs = parseFactor();
+        Optional<Token> token = tryExpect(TokenType.PLUS);
+        if (token.isPresent()) {
+            Expression rhs = parseFactor();
+            lhs = SumTerm.newInstance(lhs, rhs);
+        }
+        return lhs;
     }
 }

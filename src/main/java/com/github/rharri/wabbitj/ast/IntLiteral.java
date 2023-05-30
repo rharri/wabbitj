@@ -3,31 +3,30 @@ package com.github.rharri.wabbitj.ast;
 import com.github.rharri.wabbitj.NodeVisitor;
 
 import java.util.Objects;
-import java.util.Optional;
 
 public final class IntLiteral implements Expression {
-    private final int digits;
+    private final int value;
 
-    private IntLiteral(int digits) {
-        this.digits = digits;
+    private IntLiteral(int value) {
+        this.value = value;
     }
 
-    public static IntLiteral newInstance(int digits) {
-        return new IntLiteral(digits);
+    public static IntLiteral newInstance(int value) {
+        return new IntLiteral(value);
     }
 
     @Override
-    public Optional<Object> accept(NodeVisitor visitor) {
-        return visitor.visitIntLiteral(this);
+    public void accept(NodeVisitor visitor) {
+        visitor.visitIntLiteral(this);
     }
 
     @Override
     public String toString() {
-        return "IntLiteral [digits=" + digits + "]";
+        return "IntLiteral [value=" + value + "]";
     }
 
-    public int digits() {
-        return digits;
+    public int getValue() {
+        return value;
     }
 
     @Override
@@ -35,11 +34,11 @@ public final class IntLiteral implements Expression {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
         var that = (IntLiteral) obj;
-        return this.digits == that.digits;
+        return this.value == that.value;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(digits);
+        return Objects.hash(value);
     }
 }

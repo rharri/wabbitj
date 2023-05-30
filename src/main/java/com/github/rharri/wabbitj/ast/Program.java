@@ -17,8 +17,8 @@ public final class Program implements AbstractSyntaxTree {
     }
 
     @Override
-    public Optional<Object> accept(NodeVisitor visitor) {
-        return visitor.visitProgram(this);
+    public void accept(NodeVisitor visitor) {
+        visitor.visitProgram(this);
     }
 
     @Override

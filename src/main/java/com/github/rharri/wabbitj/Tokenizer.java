@@ -152,6 +152,9 @@ public class Tokenizer {
                     addToken(TokenType.FLOAT, floatingPoint.startIndex, floatingPoint.found);
                     index = floatingPoint.endIndex;
                 }
+            } else if (peek("+")) {
+                addToken(TokenType.PLUS, index, "+");
+                index += 1;
             } else if (peek(";")) {
                 addToken(TokenType.SEMI, index, ";");
                 index += 1;

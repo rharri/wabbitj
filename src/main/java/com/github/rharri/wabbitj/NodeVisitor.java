@@ -5,9 +5,10 @@ import com.github.rharri.wabbitj.ast.*;
 import java.util.Optional;
 
 public interface NodeVisitor {
-    Optional<Object> visitProgram(Program program);
-    Optional<Object> visitStatements(Statements statements);
-    Optional<Object> visitPrint(Print print);
-    Optional<Object> visitIntLiteral(IntLiteral intLiteral);
-    Optional<Object> visitFloatLiteral(FloatLiteral floatLiteral);
+    void visitProgram(Program program);
+    void visitStatements(Statements statements);
+    void visitPrint(Print print);
+    void visitIntLiteral(IntLiteral intLiteral);
+    void visitFloatLiteral(FloatLiteral floatLiteral);
+    void visitSumTerm(SumTerm sumTerm);
 }

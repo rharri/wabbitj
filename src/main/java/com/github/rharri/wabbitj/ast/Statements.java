@@ -27,8 +27,8 @@ public class Statements implements AbstractSyntaxTree {
     }
 
     @Override
-    public Optional<Object> accept(NodeVisitor visitor) {
-        return visitor.visitStatements(this);
+    public void accept(NodeVisitor visitor) {
+        visitor.visitStatements(this);
     }
 
     @Override

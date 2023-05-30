@@ -149,4 +149,31 @@ public class TokenizerTest {
 
         assertThat(tokens).containsOnlyOnceElementsOf(expected);
     }
+
+    @Test
+    public void shouldTokenizeSumTerm() {
+        var print = new Token(TokenType.PRINT, "print", new Position(1, 1));
+        var intLiteral1 = new Token(TokenType.INTEGER, "2", new Position(1, 7));
+        var plusOp = new Token(TokenType.PLUS, "+", new Position(1, 9));
+        var intLiteral2 = new Token(TokenType.INTEGER, "3", new Position(1, 11));
+        var semicolon = new Token(TokenType.SEMI, ";", new Position(1, 12));
+        var endOfFile = new Token(TokenType.EOF, "EOF", new Position(1, 13));
+
+        var programText = "print 2 + 3;";
+
+        var tokenizer = Tokenizer.newInstance(programText);
+        tokenizer.tokenize();
+        List<Token> tokens = tokenizer.getTokens();
+
+        var expected = List.of(
+                print,
+                intLiteral1,
+                plusOp,
+                intLiteral2,
+                semicolon,
+                endOfFile
+        );
+
+        assertThat(tokens).containsOnlyOnceElementsOf(expected);
+    }
 }
