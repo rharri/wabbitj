@@ -10,7 +10,7 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-@CommandLine.Command(name = "wabbitj", mixinStandardHelpOptions = true, version = "wabbitj 0.0.1",
+@CommandLine.Command(name = "wabbitj", mixinStandardHelpOptions = true, versionProvider = WabbitJ.PackageVersionProvider.class,
     description = "Wabbit is a statically typed programming language similar to Go. Wabbit was created by David Beazley." +
             " Please see https://www.dabeaz.com/compiler.html for more information.")
 public class WabbitJ implements Callable<Integer> {
@@ -39,5 +39,20 @@ public class WabbitJ implements Callable<Integer> {
             return 1;
         }
         return 0;
+    }
+
+    // Credit: https://github.com/remkop/picocli/issues/236
+    // Credit: https://docs.oracle.com/javase/tutorial/deployment/jar/packageman.html
+    // Credit: https://docs.oracle.com/javase/8/docs/technotes/guides/versioning/spec/versioning2.html
+    // Credit: https://stackoverflow.com/a/921753
+    static class PackageVersionProvider implements CommandLine.IVersionProvider {
+
+        @Override
+        public String[] getVersion() {
+            Package pkg = WabbitJ.class.getPackage();
+            return new String[] { String.format("%s %s",
+                    pkg.getImplementationTitle(),
+                    pkg.getImplementationVersion()) };
+        }
     }
 }
