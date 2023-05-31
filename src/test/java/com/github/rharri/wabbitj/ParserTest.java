@@ -199,4 +199,29 @@ public class ParserTest {
         inOrder.verify(interpreter).visitUnaryOp(Mockito.any());
         inOrder.verify(interpreter).visitIntLiteral(Mockito.any());
     }
+
+    @Test
+    public void shouldParsePrintTrinomialExpression() {
+        var tokenizer = Tokenizer.newInstance("print 2 + 3 * 4;");
+        tokenizer.tokenize();
+        var tokens = tokenizer.getTokens();
+
+        var parser = Parser.newInstance(tokens);
+        var ast = parser.parse();
+
+        var runtime = runtimeWithoutStandardOut();
+
+        var interpreter = Mockito.spy(Interpreter.newInstance(runtime));
+
+        ast.accept(interpreter);
+
+        InOrder inOrder = inOrder(interpreter);
+        inOrder.verify(interpreter).visitProgram(Mockito.any());
+        inOrder.verify(interpreter).visitStatements(Mockito.any());
+        inOrder.verify(interpreter).visitPrint(Mockito.any());
+        inOrder.verify(interpreter).visitBinaryOp(Mockito.any());
+        inOrder.verify(interpreter).visitIntLiteral(Mockito.any());
+        inOrder.verify(interpreter).visitBinaryOp(Mockito.any());
+        inOrder.verify(interpreter, times(2)).visitIntLiteral(Mockito.any());
+    }
 }

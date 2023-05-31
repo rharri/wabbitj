@@ -282,4 +282,35 @@ public class TokenizerTest {
 
         assertThat(tokens).containsOnlyOnceElementsOf(expected);
     }
+
+    @Test
+    public void shouldTokenizeTrinomialOps() {
+        var print = new Token(TokenType.PRINT, "print", new Position(1, 1));
+        var intLiteral1 = new Token(TokenType.INTEGER, "2", new Position(1, 7));
+        var plusOp = new Token(TokenType.PLUS, "+", new Position(1, 9));
+        var intLiteral2 = new Token(TokenType.INTEGER, "3", new Position(1, 11));
+        var multiplicationOp = new Token(TokenType.TIMES, "*", new Position(1, 13));
+        var intLiteral3 = new Token(TokenType.INTEGER, "4", new Position(1, 15));
+        var semicolon = new Token(TokenType.SEMI, ";", new Position(1, 16));
+        var endOfFile = new Token(TokenType.EOF, "EOF", new Position(1, 17));
+
+        var programText = "print 2 + 3 * 4;";
+
+        var tokenizer = Tokenizer.newInstance(programText);
+        tokenizer.tokenize();
+        List<Token> tokens = tokenizer.getTokens();
+
+        var expected = List.of(
+                print,
+                intLiteral1,
+                plusOp,
+                intLiteral2,
+                multiplicationOp,
+                intLiteral3,
+                semicolon,
+                endOfFile
+        );
+
+        assertThat(tokens).containsOnlyOnceElementsOf(expected);
+    }
 }
