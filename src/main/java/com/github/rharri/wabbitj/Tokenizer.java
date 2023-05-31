@@ -155,6 +155,15 @@ public class Tokenizer {
             } else if (peek("+")) {
                 addToken(TokenType.PLUS, index, "+");
                 index += 1;
+            } else if (peek("-")) {
+                addToken(TokenType.MINUS, index, "-");
+                index += 1;
+            } else if (peek("*")) {
+                addToken(TokenType.TIMES, index, "*");
+                index += 1;
+            } else if (peek("/")) {
+                addToken(TokenType.DIVIDE, index, "/");
+                index += 1;
             } else if (peek(";")) {
                 addToken(TokenType.SEMI, index, ";");
                 index += 1;

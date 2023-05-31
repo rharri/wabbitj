@@ -57,4 +57,58 @@ public class InterpreterTest {
         // Assert on the underlying byte[] stream
         assertEquals("5", streamTuple.out.toString().trim());
     }
+
+    @Test
+    public void shouldPrintSubtractionExpression() {
+        var intLiteral1 = IntLiteral.newInstance(46);
+        var intLiteral2 = IntLiteral.newInstance(4);
+        var binaryOp = BinaryOp.newInstance(Operator.MINUS, intLiteral1, intLiteral2);
+        var print = Print.newInstance(binaryOp);
+        var statements = Statements.newInstance();
+        statements.add(print);
+        var program = Program.newInstance(statements);
+
+        Tuple streamTuple = printableByteArrayStream();
+        var runtime = JavaRuntime.newInstance(streamTuple.printableStream);
+        program.accept(Interpreter.newInstance(runtime));
+
+        // Assert on the underlying byte[] stream
+        assertEquals("42", streamTuple.out.toString().trim());
+    }
+
+    @Test
+    public void shouldPrintMultiplicationExpression() {
+        var intLiteral1 = IntLiteral.newInstance(2);
+        var intLiteral2 = IntLiteral.newInstance(3);
+        var binaryOp = BinaryOp.newInstance(Operator.TIMES, intLiteral1, intLiteral2);
+        var print = Print.newInstance(binaryOp);
+        var statements = Statements.newInstance();
+        statements.add(print);
+        var program = Program.newInstance(statements);
+
+        Tuple streamTuple = printableByteArrayStream();
+        var runtime = JavaRuntime.newInstance(streamTuple.printableStream);
+        program.accept(Interpreter.newInstance(runtime));
+
+        // Assert on the underlying byte[] stream
+        assertEquals("6", streamTuple.out.toString().trim());
+    }
+
+    @Test
+    public void shouldPrintDivideExpression() {
+        var intLiteral1 = IntLiteral.newInstance(6);
+        var intLiteral2 = IntLiteral.newInstance(2);
+        var binaryOp = BinaryOp.newInstance(Operator.DIVIDE, intLiteral1, intLiteral2);
+        var print = Print.newInstance(binaryOp);
+        var statements = Statements.newInstance();
+        statements.add(print);
+        var program = Program.newInstance(statements);
+
+        Tuple streamTuple = printableByteArrayStream();
+        var runtime = JavaRuntime.newInstance(streamTuple.printableStream);
+        program.accept(Interpreter.newInstance(runtime));
+
+        // Assert on the underlying byte[] stream
+        assertEquals("3", streamTuple.out.toString().trim());
+    }
 }

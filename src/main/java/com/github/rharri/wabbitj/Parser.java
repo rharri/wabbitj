@@ -33,6 +33,15 @@ public class Parser {
             return Optional.empty();
     }
 
+    private Optional<Token> tryExpect(TokenType... types) {
+        for (TokenType type : types) {
+            Optional<Token> token = tryExpect(type);
+            if (token.isPresent())
+                return token;
+        }
+        return Optional.empty();
+    }
+
     private boolean peek(TokenType type) {
         return tokens.get(index).type().equals(type);
     }
@@ -85,11 +94,31 @@ public class Parser {
     }
 
     private Expression parseSumTerm() {
+        Expression lhs = parseMulTerm();
+        Optional<Token> token = tryExpect(TokenType.PLUS, TokenType.MINUS);
+
+        if (token.isPresent()) {
+            Expression rhs = parseMulTerm();
+
+            switch(token.get().type()) {
+                case PLUS -> lhs = BinaryOp.newInstance(Operator.PLUS, lhs, rhs);
+                case MINUS -> lhs = BinaryOp.newInstance(Operator.MINUS, lhs, rhs);
+            }
+        }
+        return lhs;
+    }
+
+    private Expression parseMulTerm() {
         Expression lhs = parseFactor();
-        Optional<Token> token = tryExpect(TokenType.PLUS);
+        Optional<Token> token = tryExpect(TokenType.TIMES, TokenType.DIVIDE);
+
         if (token.isPresent()) {
             Expression rhs = parseFactor();
-            lhs = BinaryOp.newInstance(Operator.PLUS, lhs, rhs);
+
+            switch(token.get().type()) {
+                case TIMES -> lhs = BinaryOp.newInstance(Operator.TIMES, lhs, rhs);
+                case DIVIDE -> lhs = BinaryOp.newInstance(Operator.DIVIDE, lhs, rhs);
+            }
         }
         return lhs;
     }

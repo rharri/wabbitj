@@ -1,4 +1,26 @@
+// integer addition
 print 2 + 3;
-print 1000 + 1;
+
+// float addition
 print 1.5 + 1.2;
 print .15 + .05;
+
+// integer subtraction
+print 46 - 4;
+
+// float subtraction
+print 1.6 - 0.3;
+print .15 - .12;
+
+// integer multiplication
+print 2 * 3;
+
+// float multiplication
+print 1.6 * 2.0;
+
+// integer division
+print 6 / 2;
+print 3 / 2;
+
+// float division
+print 2.6 / .3;

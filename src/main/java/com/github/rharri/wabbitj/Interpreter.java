@@ -54,8 +54,8 @@ public class Interpreter implements NodeVisitor {
         binaryOp.getLhs().accept(this);
         binaryOp.getRhs().accept(this);
 
-        WabbitValue lhs = stack.pop();
         WabbitValue rhs = stack.pop();
+        WabbitValue lhs = stack.pop();
 
         Object result = runtime.binaryOp(binaryOp.getOperator(), lhs.javaObject(), rhs.javaObject());
         stack.add(new WabbitValue(WabbitType.ANY, result));
