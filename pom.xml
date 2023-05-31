@@ -6,7 +6,7 @@
 
   <groupId>com.github.rharri.wabbitj</groupId>
   <artifactId>wabbitj</artifactId>
-  <version>0.0.1</version>
+  <version>0.10.1</version>
   <packaging>jar</packaging>
 
   <name>wabbitj</name>
