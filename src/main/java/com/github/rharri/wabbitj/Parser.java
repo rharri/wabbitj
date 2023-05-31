@@ -2,16 +2,17 @@ package com.github.rharri.wabbitj;
 
 import com.github.rharri.wabbitj.ast.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class Parser {
 
-    private final List<Token> tokens;
+    private final List<Token> tokens = new ArrayList<>();
     private int index;
 
     private Parser(List<Token> tokens) {
-        this.tokens = tokens;
+        this.tokens.addAll(tokens);
         this.index = 0;
     }
 

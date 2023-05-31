@@ -11,12 +11,10 @@ import java.util.function.UnaryOperator;
 public class JavaRuntime {
 
     private final PrintStream out;
-    private final Map<Operator, BiFunction<Object, Object, Object>> binaryOperations = new HashMap<>();
-    private final Map<Operator, UnaryOperator<Object>> unaryOperations = new HashMap<>();
+    private static final Map<Operator, BiFunction<Object, Object, Object>> binaryOperations = new HashMap<>();
+    private static final Map<Operator, UnaryOperator<Object>> unaryOperations = new HashMap<>();
 
-    private JavaRuntime(PrintStream out) {
-        this.out = out;
-
+    static {
         binaryOperations.put(Operator.PLUS, JavaRuntime::add);
         binaryOperations.put(Operator.MINUS, JavaRuntime::subtract);
         binaryOperations.put(Operator.TIMES, JavaRuntime::multiply);
@@ -24,6 +22,10 @@ public class JavaRuntime {
 
         unaryOperations.put(Operator.MINUS, JavaRuntime::minus);
         unaryOperations.put(Operator.PLUS, JavaRuntime::plus);
+    }
+
+    private JavaRuntime(PrintStream out) {
+        this.out = out;
     }
 
     public static JavaRuntime newInstance(PrintStream printStream) {
