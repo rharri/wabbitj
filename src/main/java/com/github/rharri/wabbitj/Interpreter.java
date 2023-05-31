@@ -25,7 +25,7 @@ public class Interpreter implements NodeVisitor {
 
     @Override
     public void visitStatements(Statements statements) {
-        for (AbstractSyntaxTree statement : statements.getStatements()) {
+        for (AbstractSyntaxTree statement : statements.statements()) {
             statement.accept(this);
         }
     }
@@ -39,40 +39,40 @@ public class Interpreter implements NodeVisitor {
 
     @Override
     public void visitIntLiteral(IntLiteral intLiteral) {
-        int value = intLiteral.getValue();
+        int value = intLiteral.value();
         stack.push(new WabbitValue(WabbitType.INT, value));
     }
 
     @Override
     public void visitFloatLiteral(FloatLiteral floatLiteral) {
-        float value = floatLiteral.getValue();
+        float value = floatLiteral.value();
         stack.push(new WabbitValue(WabbitType.FLOAT, value));
     }
 
     @Override
     public void visitBinaryOp(BinaryOp binaryOp) {
-        binaryOp.getLhs().accept(this);
-        binaryOp.getRhs().accept(this);
+        binaryOp.lhs().accept(this);
+        binaryOp.rhs().accept(this);
 
         WabbitValue rhs = stack.pop();
         WabbitValue lhs = stack.pop();
 
-        Object result = runtime.binaryOp(binaryOp.getOperator(), lhs.javaObject(), rhs.javaObject());
+        Object result = runtime.binaryOp(binaryOp.operator(), lhs.javaObject(), rhs.javaObject());
         stack.add(new WabbitValue(WabbitType.ANY, result));
     }
 
     @Override
     public void visitUnaryOp(UnaryOp unaryOp) {
-        unaryOp.getOperand().accept(this);
+        unaryOp.operand().accept(this);
 
         WabbitValue operand = stack.pop();
 
-        Object result = runtime.unaryOp(unaryOp.getOperator(), operand.javaObject());
+        Object result = runtime.unaryOp(unaryOp.operator(), operand.javaObject());
         stack.add(new WabbitValue(WabbitType.ANY, result));
     }
 
     @Override
     public void visitGrouping(Grouping grouping) {
-        grouping.getExpression().accept(this);
+        grouping.expression().accept(this);
     }
 }

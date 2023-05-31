@@ -51,7 +51,7 @@ public class Parser {
     }
 
     public AbstractSyntaxTree parse() {
-        var statements = Statements.newInstance();
+        var statements = new Statements();
 
         while (!peek(TokenType.EOF)) {
             if (peek(TokenType.PRINT))
@@ -60,14 +60,14 @@ public class Parser {
                 expect(TokenType.COMMENT);
         }
 
-        return Program.newInstance(statements);
+        return new Program(statements);
     }
 
     private Statement parsePrintStatement() {
         expect(TokenType.PRINT);
         Expression expression = parseExpression();
         expect(TokenType.SEMI);
-        return Print.newInstance(expression);
+        return new Print(expression);
     }
 
     private Expression parseFactor() {
@@ -90,13 +90,13 @@ public class Parser {
     private Expression parseIntLiteral() {
         Token token = expect(TokenType.INTEGER);
         int value = Integer.parseInt(token.representation());
-        return IntLiteral.newInstance(value);
+        return new IntLiteral(value);
     }
 
     private Expression parseFloatLiteral() {
         Token token = expect(TokenType.FLOAT);
         float value = Float.parseFloat(token.representation());
-        return FloatLiteral.newInstance(value);
+        return new FloatLiteral(value);
     }
 
     private Expression parseExpression() {
@@ -111,8 +111,8 @@ public class Parser {
             Expression rhs = parseMulTerm();
 
             switch (token.get().type()) {
-                case PLUS -> lhs = BinaryOp.newInstance(Operator.PLUS, lhs, rhs);
-                case MINUS -> lhs = BinaryOp.newInstance(Operator.MINUS, lhs, rhs);
+                case PLUS -> lhs = new BinaryOp(Operator.PLUS, lhs, rhs);
+                case MINUS -> lhs = new BinaryOp(Operator.MINUS, lhs, rhs);
             }
         }
         return lhs;
@@ -126,8 +126,8 @@ public class Parser {
             Expression rhs = parseFactor();
 
             switch (token.get().type()) {
-                case TIMES -> lhs = BinaryOp.newInstance(Operator.TIMES, lhs, rhs);
-                case DIVIDE -> lhs = BinaryOp.newInstance(Operator.DIVIDE, lhs, rhs);
+                case TIMES -> lhs = new BinaryOp(Operator.TIMES, lhs, rhs);
+                case DIVIDE -> lhs = new BinaryOp(Operator.DIVIDE, lhs, rhs);
             }
         }
         return lhs;
@@ -140,8 +140,8 @@ public class Parser {
 
         if (token.isPresent()) {
             return switch (token.get().type()) {
-                case MINUS -> UnaryOp.newInstance(Operator.MINUS, operand);
-                case PLUS -> UnaryOp.newInstance(Operator.PLUS, operand);
+                case MINUS -> new UnaryOp(Operator.MINUS, operand);
+                case PLUS -> new UnaryOp(Operator.PLUS, operand);
                 default -> throw new IllegalArgumentException("Unary operation not supported.");
             };
         }
@@ -153,6 +153,6 @@ public class Parser {
         expect(TokenType.LPAREN);
         Expression expression = parseExpression();
         expect(TokenType.RPAREN);
-        return Grouping.newInstance(expression);
+        return new Grouping(expression);
     }
 }

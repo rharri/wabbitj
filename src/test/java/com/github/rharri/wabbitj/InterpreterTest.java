@@ -26,11 +26,11 @@ public class InterpreterTest {
 
     @Test
     public void shouldPrintIntLiteral() {
-        var intLiteral = IntLiteral.newInstance(42);
-        var print = Print.newInstance(intLiteral);
-        var statements = Statements.newInstance();
+        var intLiteral = new IntLiteral(42);
+        var print = new Print(intLiteral);
+        var statements = new Statements();
         statements.add(print);
-        var program = Program.newInstance(statements);
+        var program = new Program(statements);
 
         Tuple streamTuple = printableByteArrayStream();
         var runtime = JavaRuntime.newInstance(streamTuple.printableStream);
@@ -42,13 +42,13 @@ public class InterpreterTest {
 
     @Test
     public void shouldPrintAdditionExpression() {
-        var intLiteral1 = IntLiteral.newInstance(2);
-        var intLiteral2 = IntLiteral.newInstance(3);
-        var binaryOp = BinaryOp.newInstance(Operator.PLUS, intLiteral1, intLiteral2);
-        var print = Print.newInstance(binaryOp);
-        var statements = Statements.newInstance();
+        var intLiteral1 = new IntLiteral(2);
+        var intLiteral2 = new IntLiteral(3);
+        var binaryOp = new BinaryOp(Operator.PLUS, intLiteral1, intLiteral2);
+        var print = new Print(binaryOp);
+        var statements = new Statements();
         statements.add(print);
-        var program = Program.newInstance(statements);
+        var program = new Program(statements);
 
         Tuple streamTuple = printableByteArrayStream();
         var runtime = JavaRuntime.newInstance(streamTuple.printableStream);
@@ -60,13 +60,13 @@ public class InterpreterTest {
 
     @Test
     public void shouldPrintSubtractionExpression() {
-        var intLiteral1 = IntLiteral.newInstance(46);
-        var intLiteral2 = IntLiteral.newInstance(4);
-        var binaryOp = BinaryOp.newInstance(Operator.MINUS, intLiteral1, intLiteral2);
-        var print = Print.newInstance(binaryOp);
-        var statements = Statements.newInstance();
+        var intLiteral1 = new IntLiteral(46);
+        var intLiteral2 = new IntLiteral(4);
+        var binaryOp = new BinaryOp(Operator.MINUS, intLiteral1, intLiteral2);
+        var print = new Print(binaryOp);
+        var statements = new Statements();
         statements.add(print);
-        var program = Program.newInstance(statements);
+        var program = new Program(statements);
 
         Tuple streamTuple = printableByteArrayStream();
         var runtime = JavaRuntime.newInstance(streamTuple.printableStream);
@@ -78,13 +78,13 @@ public class InterpreterTest {
 
     @Test
     public void shouldPrintMultiplicationExpression() {
-        var intLiteral1 = IntLiteral.newInstance(2);
-        var intLiteral2 = IntLiteral.newInstance(3);
-        var binaryOp = BinaryOp.newInstance(Operator.TIMES, intLiteral1, intLiteral2);
-        var print = Print.newInstance(binaryOp);
-        var statements = Statements.newInstance();
+        var intLiteral1 = new IntLiteral(2);
+        var intLiteral2 = new IntLiteral(3);
+        var binaryOp = new BinaryOp(Operator.TIMES, intLiteral1, intLiteral2);
+        var print = new Print(binaryOp);
+        var statements = new Statements();
         statements.add(print);
-        var program = Program.newInstance(statements);
+        var program = new Program(statements);
 
         Tuple streamTuple = printableByteArrayStream();
         var runtime = JavaRuntime.newInstance(streamTuple.printableStream);
@@ -96,13 +96,13 @@ public class InterpreterTest {
 
     @Test
     public void shouldPrintDivideExpression() {
-        var intLiteral1 = IntLiteral.newInstance(6);
-        var intLiteral2 = IntLiteral.newInstance(2);
-        var binaryOp = BinaryOp.newInstance(Operator.DIVIDE, intLiteral1, intLiteral2);
-        var print = Print.newInstance(binaryOp);
-        var statements = Statements.newInstance();
+        var intLiteral1 = new IntLiteral(6);
+        var intLiteral2 = new IntLiteral(2);
+        var binaryOp = new BinaryOp(Operator.DIVIDE, intLiteral1, intLiteral2);
+        var print = new Print(binaryOp);
+        var statements = new Statements();
         statements.add(print);
-        var program = Program.newInstance(statements);
+        var program = new Program(statements);
 
         Tuple streamTuple = printableByteArrayStream();
         var runtime = JavaRuntime.newInstance(streamTuple.printableStream);
@@ -114,12 +114,12 @@ public class InterpreterTest {
 
     @Test
     public void shouldPrintUnaryExpression() {
-        var intLiteral = IntLiteral.newInstance(5);
-        var unaryOp = UnaryOp.newInstance(Operator.MINUS, intLiteral);
-        var print = Print.newInstance(unaryOp);
-        var statements = Statements.newInstance();
+        var intLiteral = new IntLiteral(5);
+        var unaryOp = new UnaryOp(Operator.MINUS, intLiteral);
+        var print = new Print(unaryOp);
+        var statements = new Statements();
         statements.add(print);
-        var program = Program.newInstance(statements);
+        var program = new Program(statements);
 
         Tuple streamTuple = printableByteArrayStream();
         var runtime = JavaRuntime.newInstance(streamTuple.printableStream);
@@ -131,15 +131,15 @@ public class InterpreterTest {
 
     @Test
     public void shouldPrintTrinomialExpression() {
-        var intLiteral1 = IntLiteral.newInstance(3);
-        var intLiteral2 = IntLiteral.newInstance(4);
-        var binaryOp1 = BinaryOp.newInstance(Operator.TIMES, intLiteral1, intLiteral2);
-        var intLiteral3 = IntLiteral.newInstance(2);
-        var binaryOp2 = BinaryOp.newInstance(Operator.PLUS, intLiteral3, binaryOp1);
-        var print = Print.newInstance(binaryOp2);
-        var statements = Statements.newInstance();
+        var intLiteral1 = new IntLiteral(3);
+        var intLiteral2 = new IntLiteral(4);
+        var binaryOp1 = new BinaryOp(Operator.TIMES, intLiteral1, intLiteral2);
+        var intLiteral3 = new IntLiteral(2);
+        var binaryOp2 = new BinaryOp(Operator.PLUS, intLiteral3, binaryOp1);
+        var print = new Print(binaryOp2);
+        var statements = new Statements();
         statements.add(print);
-        var program = Program.newInstance(statements);
+        var program = new Program(statements);
 
         Tuple streamTuple = printableByteArrayStream();
         var runtime = JavaRuntime.newInstance(streamTuple.printableStream);
@@ -151,16 +151,16 @@ public class InterpreterTest {
 
     @Test
     public void shouldPrintGroupingExpression() {
-        var intLiteral1 = IntLiteral.newInstance(2);
-        var intLiteral2 = IntLiteral.newInstance(3);
-        var binaryOp1 = BinaryOp.newInstance(Operator.PLUS, intLiteral1, intLiteral2);
-        var grouping = Grouping.newInstance(binaryOp1);
-        var intLiteral3 = IntLiteral.newInstance(4);
-        var binaryOp2 = BinaryOp.newInstance(Operator.TIMES, grouping, intLiteral3);
-        var print = Print.newInstance(binaryOp2);
-        var statements = Statements.newInstance();
+        var intLiteral1 = new IntLiteral(2);
+        var intLiteral2 = new IntLiteral(3);
+        var binaryOp1 = new BinaryOp(Operator.PLUS, intLiteral1, intLiteral2);
+        var grouping = new Grouping(binaryOp1);
+        var intLiteral3 = new IntLiteral(4);
+        var binaryOp2 = new BinaryOp(Operator.TIMES, grouping, intLiteral3);
+        var print = new Print(binaryOp2);
+        var statements = new Statements();
         statements.add(print);
-        var program = Program.newInstance(statements);
+        var program = new Program(statements);
 
         Tuple streamTuple = printableByteArrayStream();
         var runtime = JavaRuntime.newInstance(streamTuple.printableStream);
