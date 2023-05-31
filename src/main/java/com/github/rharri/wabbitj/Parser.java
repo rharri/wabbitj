@@ -80,7 +80,11 @@ public class Parser {
         if (peek(TokenType.MINUS) || peek(TokenType.PLUS))
             return parseUnary();
 
-        throw new IllegalArgumentException("Invalid token type.");
+        if (peek(TokenType.LPAREN))
+            return parseGrouping();
+
+        Token token = tokens.get(index);
+        throw new IllegalArgumentException("Parser error: Unexpected token " + token.type());
     }
 
     private Expression parseIntLiteral() {
@@ -143,5 +147,12 @@ public class Parser {
         }
 
         throw new IllegalArgumentException("Invalid token type.");
+    }
+
+    private Expression parseGrouping() {
+        expect(TokenType.LPAREN);
+        Expression expression = parseExpression();
+        expect(TokenType.RPAREN);
+        return Grouping.newInstance(expression);
     }
 }

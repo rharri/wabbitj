@@ -164,6 +164,12 @@ public class Tokenizer {
             } else if (peek("/")) {
                 addToken(TokenType.DIVIDE, index, "/");
                 index += 1;
+            } else if (peek("(")) {
+                addToken(TokenType.LPAREN, index, "(");
+                index += 1;
+            } else if (peek(")")) {
+                addToken(TokenType.RPAREN, index, ")");
+                index += 1;
             } else if (peek(";")) {
                 addToken(TokenType.SEMI, index, ";");
                 index += 1;

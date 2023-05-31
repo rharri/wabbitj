@@ -10,4 +10,5 @@ public interface NodeVisitor {
     void visitFloatLiteral(FloatLiteral floatLiteral);
     void visitBinaryOp(BinaryOp binaryOp);
     void visitUnaryOp(UnaryOp unaryOp);
+    void visitGrouping(Grouping grouping);
 }

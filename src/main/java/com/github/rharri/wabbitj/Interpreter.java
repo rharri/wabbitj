@@ -70,4 +70,9 @@ public class Interpreter implements NodeVisitor {
         Object result = runtime.unaryOp(unaryOp.getOperator(), operand.javaObject());
         stack.add(new WabbitValue(WabbitType.ANY, result));
     }
+
+    @Override
+    public void visitGrouping(Grouping grouping) {
+        grouping.getExpression().accept(this);
+    }
 }

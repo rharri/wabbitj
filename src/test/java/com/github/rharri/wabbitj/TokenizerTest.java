@@ -284,7 +284,7 @@ public class TokenizerTest {
     }
 
     @Test
-    public void shouldTokenizeTrinomialOps() {
+    public void shouldTokenizeTrinomial() {
         var print = new Token(TokenType.PRINT, "print", new Position(1, 1));
         var intLiteral1 = new Token(TokenType.INTEGER, "2", new Position(1, 7));
         var plusOp = new Token(TokenType.PLUS, "+", new Position(1, 9));
@@ -305,6 +305,41 @@ public class TokenizerTest {
                 intLiteral1,
                 plusOp,
                 intLiteral2,
+                multiplicationOp,
+                intLiteral3,
+                semicolon,
+                endOfFile
+        );
+
+        assertThat(tokens).containsOnlyOnceElementsOf(expected);
+    }
+
+    @Test
+    public void shouldTokenizeGrouping() {
+        var print = new Token(TokenType.PRINT, "print", new Position(1, 1));
+        var lparen = new Token(TokenType.LPAREN, "(", new Position(1, 7));
+        var intLiteral1 = new Token(TokenType.INTEGER, "2", new Position(1, 8));
+        var plusOp = new Token(TokenType.PLUS, "+", new Position(1, 10));
+        var intLiteral2 = new Token(TokenType.INTEGER, "3", new Position(1, 12));
+        var rparen = new Token(TokenType.RPAREN, ")", new Position(1, 13));
+        var multiplicationOp = new Token(TokenType.TIMES, "*", new Position(1, 15));
+        var intLiteral3 = new Token(TokenType.INTEGER, "4", new Position(1, 17));
+        var semicolon = new Token(TokenType.SEMI, ";", new Position(1, 18));
+        var endOfFile = new Token(TokenType.EOF, "EOF", new Position(1, 19));
+
+        var programText = "print (2 + 3) * 4;";
+
+        var tokenizer = Tokenizer.newInstance(programText);
+        tokenizer.tokenize();
+        List<Token> tokens = tokenizer.getTokens();
+
+        var expected = List.of(
+                print,
+                lparen,
+                intLiteral1,
+                plusOp,
+                intLiteral2,
+                rparen,
                 multiplicationOp,
                 intLiteral3,
                 semicolon,

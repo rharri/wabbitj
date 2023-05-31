@@ -148,4 +148,25 @@ public class InterpreterTest {
         // Assert on the underlying byte[] stream
         assertEquals("14", streamTuple.out.toString().trim());
     }
+
+    @Test
+    public void shouldPrintGroupingExpression() {
+        var intLiteral1 = IntLiteral.newInstance(2);
+        var intLiteral2 = IntLiteral.newInstance(3);
+        var binaryOp1 = BinaryOp.newInstance(Operator.PLUS, intLiteral1, intLiteral2);
+        var grouping = Grouping.newInstance(binaryOp1);
+        var intLiteral3 = IntLiteral.newInstance(4);
+        var binaryOp2 = BinaryOp.newInstance(Operator.TIMES, grouping, intLiteral3);
+        var print = Print.newInstance(binaryOp2);
+        var statements = Statements.newInstance();
+        statements.add(print);
+        var program = Program.newInstance(statements);
+
+        Tuple streamTuple = printableByteArrayStream();
+        var runtime = JavaRuntime.newInstance(streamTuple.printableStream);
+        program.accept(Interpreter.newInstance(runtime));
+
+        // Assert on the underlying byte[] stream
+        assertEquals("20", streamTuple.out.toString().trim());
+    }
 }

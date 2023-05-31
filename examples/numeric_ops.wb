@@ -31,3 +31,6 @@ print -5;
 // trinomials
 print 2 + 3 * 4;
 print 2 * 3 + 4;
+
+// grouping
+print (2 + 3) * 4;
