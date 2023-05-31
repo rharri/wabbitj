@@ -176,4 +176,27 @@ public class ParserTest {
         inOrder.verify(interpreter).visitBinaryOp(Mockito.any());
         inOrder.verify(interpreter, times(2)).visitIntLiteral(Mockito.any());
     }
+
+    @Test
+    public void shouldParsePrintUnaryExpression() {
+        var tokenizer = Tokenizer.newInstance("print -5;");
+        tokenizer.tokenize();
+        var tokens = tokenizer.getTokens();
+
+        var parser = Parser.newInstance(tokens);
+        var ast = parser.parse();
+
+        var runtime = runtimeWithoutStandardOut();
+
+        var interpreter = Mockito.spy(Interpreter.newInstance(runtime));
+
+        ast.accept(interpreter);
+
+        InOrder inOrder = inOrder(interpreter);
+        inOrder.verify(interpreter).visitProgram(Mockito.any());
+        inOrder.verify(interpreter).visitStatements(Mockito.any());
+        inOrder.verify(interpreter).visitPrint(Mockito.any());
+        inOrder.verify(interpreter).visitUnaryOp(Mockito.any());
+        inOrder.verify(interpreter).visitIntLiteral(Mockito.any());
+    }
 }

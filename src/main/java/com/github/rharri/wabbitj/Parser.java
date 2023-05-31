@@ -73,8 +73,14 @@ public class Parser {
     private Expression parseFactor() {
         if (peek(TokenType.INTEGER))
             return parseIntLiteral();
-        else
+
+        if (peek(TokenType.FLOAT))
             return parseFloatLiteral();
+
+        if (peek(TokenType.MINUS) || peek(TokenType.PLUS))
+            return parseUnary();
+
+        throw new IllegalArgumentException("Invalid token type.");
     }
 
     private Expression parseIntLiteral() {
@@ -100,7 +106,7 @@ public class Parser {
         if (token.isPresent()) {
             Expression rhs = parseMulTerm();
 
-            switch(token.get().type()) {
+            switch (token.get().type()) {
                 case PLUS -> lhs = BinaryOp.newInstance(Operator.PLUS, lhs, rhs);
                 case MINUS -> lhs = BinaryOp.newInstance(Operator.MINUS, lhs, rhs);
             }
@@ -115,11 +121,27 @@ public class Parser {
         if (token.isPresent()) {
             Expression rhs = parseFactor();
 
-            switch(token.get().type()) {
+            switch (token.get().type()) {
                 case TIMES -> lhs = BinaryOp.newInstance(Operator.TIMES, lhs, rhs);
                 case DIVIDE -> lhs = BinaryOp.newInstance(Operator.DIVIDE, lhs, rhs);
             }
         }
         return lhs;
+    }
+
+    private Expression parseUnary() {
+        Optional<Token> token = tryExpect(TokenType.MINUS, TokenType.PLUS);
+
+        Expression operand = parseExpression();
+
+        if (token.isPresent()) {
+            return switch (token.get().type()) {
+                case MINUS -> UnaryOp.newInstance(Operator.MINUS, operand);
+                case PLUS -> UnaryOp.newInstance(Operator.PLUS, operand);
+                default -> throw new IllegalArgumentException("Unary operation not supported.");
+            };
+        }
+
+        throw new IllegalArgumentException("Invalid token type.");
     }
 }

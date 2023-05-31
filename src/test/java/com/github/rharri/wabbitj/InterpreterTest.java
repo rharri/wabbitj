@@ -111,4 +111,21 @@ public class InterpreterTest {
         // Assert on the underlying byte[] stream
         assertEquals("3", streamTuple.out.toString().trim());
     }
+
+    @Test
+    public void shouldPrintUnaryExpression() {
+        var intLiteral = IntLiteral.newInstance(5);
+        var unaryOp = UnaryOp.newInstance(Operator.MINUS, intLiteral);
+        var print = Print.newInstance(unaryOp);
+        var statements = Statements.newInstance();
+        statements.add(print);
+        var program = Program.newInstance(statements);
+
+        Tuple streamTuple = printableByteArrayStream();
+        var runtime = JavaRuntime.newInstance(streamTuple.printableStream);
+        program.accept(Interpreter.newInstance(runtime));
+
+        // Assert on the underlying byte[] stream
+        assertEquals("-5", streamTuple.out.toString().trim());
+    }
 }

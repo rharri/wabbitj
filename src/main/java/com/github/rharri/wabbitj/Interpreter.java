@@ -60,4 +60,14 @@ public class Interpreter implements NodeVisitor {
         Object result = runtime.binaryOp(binaryOp.getOperator(), lhs.javaObject(), rhs.javaObject());
         stack.add(new WabbitValue(WabbitType.ANY, result));
     }
+
+    @Override
+    public void visitUnaryOp(UnaryOp unaryOp) {
+        unaryOp.getOperand().accept(this);
+
+        WabbitValue operand = stack.pop();
+
+        Object result = runtime.unaryOp(unaryOp.getOperator(), operand.javaObject());
+        stack.add(new WabbitValue(WabbitType.ANY, result));
+    }
 }

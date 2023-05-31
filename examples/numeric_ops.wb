@@ -24,3 +24,6 @@ print 3 / 2;
 
 // float division
 print 2.6 / .3;
+
+// unary operation
+print -5;

@@ -208,7 +208,7 @@ public class TokenizerTest {
     public void shouldTokenizeMultiplication() {
         var print = new Token(TokenType.PRINT, "print", new Position(1, 1));
         var intLiteral1 = new Token(TokenType.INTEGER, "2", new Position(1, 7));
-        var minusOp = new Token(TokenType.TIMES, "*", new Position(1, 9));
+        var multiplicationOp = new Token(TokenType.TIMES, "*", new Position(1, 9));
         var intLiteral2 = new Token(TokenType.INTEGER, "3", new Position(1, 11));
         var semicolon = new Token(TokenType.SEMI, ";", new Position(1, 12));
         var endOfFile = new Token(TokenType.EOF, "EOF", new Position(1, 13));
@@ -222,7 +222,7 @@ public class TokenizerTest {
         var expected = List.of(
                 print,
                 intLiteral1,
-                minusOp,
+                multiplicationOp,
                 intLiteral2,
                 semicolon,
                 endOfFile
@@ -235,7 +235,7 @@ public class TokenizerTest {
     public void shouldTokenizeDivision() {
         var print = new Token(TokenType.PRINT, "print", new Position(1, 1));
         var intLiteral1 = new Token(TokenType.INTEGER, "6", new Position(1, 7));
-        var minusOp = new Token(TokenType.DIVIDE, "/", new Position(1, 9));
+        var divisionOp = new Token(TokenType.DIVIDE, "/", new Position(1, 9));
         var intLiteral2 = new Token(TokenType.INTEGER, "2", new Position(1, 11));
         var semicolon = new Token(TokenType.SEMI, ";", new Position(1, 12));
         var endOfFile = new Token(TokenType.EOF, "EOF", new Position(1, 13));
@@ -249,8 +249,33 @@ public class TokenizerTest {
         var expected = List.of(
                 print,
                 intLiteral1,
-                minusOp,
+                divisionOp,
                 intLiteral2,
+                semicolon,
+                endOfFile
+        );
+
+        assertThat(tokens).containsOnlyOnceElementsOf(expected);
+    }
+
+    @Test
+    public void shouldTokenizeUnary() {
+        var print = new Token(TokenType.PRINT, "print", new Position(1, 1));
+        var minusOp = new Token(TokenType.MINUS, "-", new Position(1, 7));
+        var intLiteral = new Token(TokenType.INTEGER, "5", new Position(1, 8));
+        var semicolon = new Token(TokenType.SEMI, ";", new Position(1, 9));
+        var endOfFile = new Token(TokenType.EOF, "EOF", new Position(1, 10));
+
+        var programText = "print -5;";
+
+        var tokenizer = Tokenizer.newInstance(programText);
+        tokenizer.tokenize();
+        List<Token> tokens = tokenizer.getTokens();
+
+        var expected = List.of(
+                print,
+                minusOp,
+                intLiteral,
                 semicolon,
                 endOfFile
         );

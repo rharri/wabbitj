@@ -9,4 +9,5 @@ public interface NodeVisitor {
     void visitIntLiteral(IntLiteral intLiteral);
     void visitFloatLiteral(FloatLiteral floatLiteral);
     void visitBinaryOp(BinaryOp binaryOp);
+    void visitUnaryOp(UnaryOp unaryOp);
 }
