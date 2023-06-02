@@ -212,6 +212,15 @@ public class Tokenizer {
         addToken(TokenType.EOF, programText.length(), "EOF");
     }
 
+    @Override
+    public String toString() {
+        return "Tokenizer{" +
+                "index=" + index +
+                ", lineNumber=" + lineNumber +
+                ", column=" + column +
+                '}';
+    }
+
     private record FindEndResult(int startIndex, int endIndex, String found) {
     }
 }
