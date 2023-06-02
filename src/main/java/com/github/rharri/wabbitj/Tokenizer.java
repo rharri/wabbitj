@@ -5,6 +5,18 @@ import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 public class Tokenizer {
+    private static final Map<String, TokenType> keywords;
+
+    static {
+        keywords = new HashMap<>();
+        keywords.put("print", TokenType.PRINT);
+    }
+
+    private static final Predicate<Character> isDigit = Character::isDigit;
+    private static final Predicate<Character> isAlpha = Character::isAlphabetic;
+    private static final Predicate<Character> isDecimalPoint = ch -> ch == '.';
+    private static final Predicate<Character> isFloatingPoint = isDigit.or(isDecimalPoint);
+
     private final String programText;
     private final char[] programTextChars;
     private int index;
@@ -12,12 +24,6 @@ public class Tokenizer {
     private int column;
     private final List<Token> tokens;
     private int lastNewLineIndex;
-    private final Map<String, TokenType> keywords;
-
-    private final Predicate<Character> isDigit = Character::isDigit;
-    private final Predicate<Character> isAlpha = Character::isAlphabetic;
-    private final Predicate<Character> isDecimalPoint = ch -> ch == '.';
-    private final Predicate<Character> isFloatingPoint = isDigit.or(isDecimalPoint);
 
     private Tokenizer(String programText) {
         this.programText = programText;
@@ -27,9 +33,6 @@ public class Tokenizer {
         this.column = 1;
         this.tokens = new ArrayList<>();
         this.lastNewLineIndex = 0;
-
-        keywords = new HashMap<>();
-        keywords.put("print", TokenType.PRINT);
     }
 
     public static Tokenizer newInstance(String programText) {
