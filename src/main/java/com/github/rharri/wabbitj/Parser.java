@@ -91,13 +91,13 @@ public class Parser {
     private Expression parseIntLiteral() {
         Token token = expect(TokenType.INTEGER);
         int value = Integer.parseInt(token.representation());
-        return new IntLiteral(value);
+        return new IntLiteral(value, token.position().line(), token.position().column());
     }
 
     private Expression parseFloatLiteral() {
         Token token = expect(TokenType.FLOAT);
         float value = Float.parseFloat(token.representation());
-        return new FloatLiteral(value);
+        return new FloatLiteral(value, token.position().line(), token.position().column());
     }
 
     private Expression parseExpression() {
@@ -106,14 +106,26 @@ public class Parser {
 
     private Expression parseSumTerm() {
         Expression lhs = parseMulTerm();
-        Optional<Token> token = tryExpect(TokenType.PLUS, TokenType.MINUS);
 
-        if (token.isPresent()) {
+        while (true) {
+            Optional<Token> token = tryExpect(TokenType.PLUS, TokenType.MINUS);
+
+            if (token.isEmpty())
+                break;
+
             Expression rhs = parseMulTerm();
 
             switch (token.get().type()) {
-                case PLUS -> lhs = new BinaryOp(Operator.PLUS, lhs, rhs);
-                case MINUS -> lhs = new BinaryOp(Operator.MINUS, lhs, rhs);
+                case PLUS -> lhs = new BinaryOp(Operator.PLUS,
+                        lhs,
+                        rhs,
+                        token.get().position().line(),
+                        token.get().position().column());
+                case MINUS -> lhs = new BinaryOp(Operator.MINUS,
+                        lhs,
+                        rhs,
+                        token.get().position().line(),
+                        token.get().position().column());
             }
         }
         return lhs;
@@ -121,14 +133,26 @@ public class Parser {
 
     private Expression parseMulTerm() {
         Expression lhs = parseFactor();
-        Optional<Token> token = tryExpect(TokenType.TIMES, TokenType.DIVIDE);
 
-        if (token.isPresent()) {
+        while (true) {
+            Optional<Token> token = tryExpect(TokenType.TIMES, TokenType.DIVIDE);
+
+            if (token.isEmpty())
+                break;
+
             Expression rhs = parseFactor();
 
             switch (token.get().type()) {
-                case TIMES -> lhs = new BinaryOp(Operator.TIMES, lhs, rhs);
-                case DIVIDE -> lhs = new BinaryOp(Operator.DIVIDE, lhs, rhs);
+                case TIMES -> lhs = new BinaryOp(Operator.TIMES,
+                        lhs,
+                        rhs,
+                        token.get().position().line(),
+                        token.get().position().column());
+                case DIVIDE -> lhs = new BinaryOp(Operator.DIVIDE,
+                        lhs,
+                        rhs,
+                        token.get().position().line(),
+                        token.get().position().column());
             }
         }
         return lhs;

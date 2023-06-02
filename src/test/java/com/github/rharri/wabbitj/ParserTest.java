@@ -249,4 +249,27 @@ public class ParserTest {
         inOrder.verify(interpreter).visitBinaryOp(Mockito.any());
         inOrder.verify(interpreter, times(3)).visitIntLiteral(Mockito.any());
     }
+
+    @Test
+    public void shouldParsePolynomial() {
+        var tokenizer = Tokenizer.newInstance("print 6 + 7 + 8 + 9 + 10;");
+        tokenizer.tokenize();
+        var tokens = tokenizer.getTokens();
+
+        var parser = Parser.newInstance(tokens);
+        var ast = parser.parse();
+
+        var runtime = runtimeWithoutStandardOut();
+
+        var interpreter = Mockito.spy(Interpreter.newInstance(runtime));
+
+        ast.accept(interpreter);
+
+        InOrder inOrder = inOrder(interpreter);
+        inOrder.verify(interpreter).visitProgram(Mockito.any());
+        inOrder.verify(interpreter).visitStatements(Mockito.any());
+        inOrder.verify(interpreter).visitPrint(Mockito.any());
+        inOrder.verify(interpreter, times(4)).visitBinaryOp(Mockito.any());
+        inOrder.verify(interpreter, times(5)).visitIntLiteral(Mockito.any());
+    }
 }

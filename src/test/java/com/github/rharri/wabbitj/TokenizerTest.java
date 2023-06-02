@@ -348,4 +348,31 @@ public class TokenizerTest {
 
         assertThat(tokens).containsOnlyOnceElementsOf(expected);
     }
+
+    @Test
+    public void shouldTokenizeBinaryOpWithMixedTypes() {
+        var print = new Token(TokenType.PRINT, "print", new Position(1, 1));
+        var intLiteral = new Token(TokenType.INTEGER, "2", new Position(1, 7));
+        var plusOp = new Token(TokenType.PLUS, "+", new Position(1, 9));
+        var floatLiteral = new Token(TokenType.FLOAT, "3.5", new Position(1, 11));
+        var semicolon = new Token(TokenType.SEMI, ";", new Position(1, 14));
+        var endOfFile = new Token(TokenType.EOF, "EOF", new Position(1, 15));
+
+        var programText = "print 2 + 3.5;";
+
+        var tokenizer = Tokenizer.newInstance(programText);
+        tokenizer.tokenize();
+        List<Token> tokens = tokenizer.getTokens();
+
+        var expected = List.of(
+                print,
+                intLiteral,
+                plusOp,
+                floatLiteral,
+                semicolon,
+                endOfFile
+        );
+
+        assertThat(tokens).containsOnlyOnceElementsOf(expected);
+    }
 }

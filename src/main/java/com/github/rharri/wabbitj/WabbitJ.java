@@ -23,11 +23,25 @@ public class WabbitJ implements Callable<Integer> {
         if (file.exists()) {
             try {
                 String programText = Files.readString(file.toPath(), StandardCharsets.UTF_8);
+
                 Tokenizer tokenizer = Tokenizer.newInstance(programText);
                 tokenizer.tokenize();
                 List<Token> tokens = tokenizer.getTokens();
+
                 Parser parser = Parser.newInstance(tokens);
                 AbstractSyntaxTree ast = parser.parse();
+
+                TypeChecker typeChecker = new TypeChecker(file.getName(), programText);
+                ast.accept(typeChecker);
+                List<String> errors = typeChecker.getErrors();
+
+                if (!errors.isEmpty()) {
+                    for (String error : errors)
+                        System.out.println(error);
+
+                    return 1;
+                }
+
                 Interpreter interpreter = Interpreter.newInstance(JavaRuntime.newInstance(System.out));
                 ast.accept(interpreter);
             } catch (IOException e) {

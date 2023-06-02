@@ -119,9 +119,12 @@ public class Tokenizer {
         if (decimalIndex < 0)
             return false;
 
-        int semicolonIndex = programText.indexOf(";", start);
+        int endOfNumberIndex = programText.indexOf(" ", start);
 
-        return decimalIndex < semicolonIndex;
+        if (endOfNumberIndex < 0)
+            endOfNumberIndex = programText.indexOf(";", start);
+
+        return decimalIndex < endOfNumberIndex;
     }
 
     public void tokenize() {
