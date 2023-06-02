@@ -153,4 +153,11 @@ public class JavaRuntime {
 
         throw new IllegalArgumentException("Cannot perform operation with provided operand.");
     }
+
+    @Override
+    public String toString() {
+        return "JavaRuntime{" +
+                "out=" + out +
+                '}';
+    }
 }

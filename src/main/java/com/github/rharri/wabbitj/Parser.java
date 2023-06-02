@@ -202,4 +202,11 @@ public class Parser {
         expect(TokenType.RPAREN);
         return new Grouping(expression);
     }
+
+    @Override
+    public String toString() {
+        return "Parser{" +
+                "index=" + index +
+                '}';
+    }
 }

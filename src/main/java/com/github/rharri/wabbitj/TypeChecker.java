@@ -115,6 +115,13 @@ public class TypeChecker implements NodeVisitor {
         return header + "\n\t" + subject + "\n" + highlighter + "\n" + message + "\n";
     }
 
+    @Override
+    public String toString() {
+        return "TypeChecker{" +
+                "filename='" + filename + '\'' +
+                '}';
+    }
+
     private record TypeInfo(WabbitType type, int line, int column) {
     }
 }

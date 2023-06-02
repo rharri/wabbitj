@@ -97,4 +97,11 @@ public class Interpreter implements NodeVisitor {
     public void visitGrouping(Grouping grouping) {
         grouping.expression().accept(this);
     }
+
+    @Override
+    public String toString() {
+        return "Interpreter{" +
+                "runtime=" + runtime +
+                '}';
+    }
 }

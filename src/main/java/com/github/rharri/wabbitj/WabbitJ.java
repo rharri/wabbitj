@@ -77,6 +77,13 @@ public class WabbitJ implements Callable<Integer> {
         return 0;
     }
 
+    @Override
+    public String toString() {
+        return "WabbitJ{" +
+                "file=" + file +
+                '}';
+    }
+
     // Credit: https://github.com/remkop/picocli/issues/236
     // Credit: https://docs.oracle.com/javase/tutorial/deployment/jar/packageman.html
     // Credit: https://docs.oracle.com/javase/8/docs/technotes/guides/versioning/spec/versioning2.html
