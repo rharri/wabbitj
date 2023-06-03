@@ -51,20 +51,21 @@ public class Parser {
         }
     }
 
-    private Optional<Token> tryExpect(TokenType type) {
+    private Token tryExpect(TokenType type) {
         if (peek(type))
-            return Optional.of(expect(type));
+            return expect(type);
         else
-            return Optional.empty();
+            return Token.UNKNOWN;
     }
 
-    private Optional<Token> tryExpect(TokenType... types) {
-        for (TokenType type : types) {
-            Optional<Token> token = tryExpect(type);
-            if (token.isPresent())
-                return token;
-        }
-        return Optional.empty();
+    private Token tryExpect(TokenType type1, TokenType type2) {
+        assert type1 != type2;
+
+        Token token = tryExpect(type1);
+        if (token != Token.UNKNOWN)
+            return token;
+
+        return tryExpect(type2);
     }
 
     private boolean peek(TokenType type) {
@@ -133,24 +134,24 @@ public class Parser {
         Expression lhs = parseMulTerm();
 
         while (true) {
-            Optional<Token> token = tryExpect(TokenType.PLUS, TokenType.MINUS);
+            Token token = tryExpect(TokenType.PLUS, TokenType.MINUS);
 
-            if (token.isEmpty())
+            if (token.isUnknown())
                 break;
 
             Expression rhs = parseMulTerm();
 
-            switch (token.get().type()) {
+            switch (token.type()) {
                 case PLUS -> lhs = new BinaryOp(Operator.PLUS,
                         lhs,
                         rhs,
-                        token.get().position().line(),
-                        token.get().position().column());
+                        token.position().line(),
+                        token.position().column());
                 case MINUS -> lhs = new BinaryOp(Operator.MINUS,
                         lhs,
                         rhs,
-                        token.get().position().line(),
-                        token.get().position().column());
+                        token.position().line(),
+                        token.position().column());
             }
         }
         return lhs;
@@ -160,43 +161,42 @@ public class Parser {
         Expression lhs = parseFactor();
 
         while (true) {
-            Optional<Token> token = tryExpect(TokenType.TIMES, TokenType.DIVIDE);
+            Token token = tryExpect(TokenType.TIMES, TokenType.DIVIDE);
 
-            if (token.isEmpty())
+            if (token.isUnknown())
                 break;
 
             Expression rhs = parseFactor();
 
-            switch (token.get().type()) {
+            switch (token.type()) {
                 case TIMES -> lhs = new BinaryOp(Operator.TIMES,
                         lhs,
                         rhs,
-                        token.get().position().line(),
-                        token.get().position().column());
+                        token.position().line(),
+                        token.position().column());
                 case DIVIDE -> lhs = new BinaryOp(Operator.DIVIDE,
                         lhs,
                         rhs,
-                        token.get().position().line(),
-                        token.get().position().column());
+                        token.position().line(),
+                        token.position().column());
             }
         }
         return lhs;
     }
 
     private Expression parseUnary() {
-        Optional<Token> token = tryExpect(TokenType.MINUS, TokenType.PLUS);
+        Token token = tryExpect(TokenType.MINUS, TokenType.PLUS);
+
+        if (token.isUnknown())
+            throw new IllegalArgumentException("Expected MINUS or PLUS, got UNKNOWN.");
 
         Expression operand = parseExpression();
 
-        if (token.isPresent()) {
-            return switch (token.get().type()) {
-                case MINUS -> new UnaryOp(Operator.MINUS, operand);
-                case PLUS -> new UnaryOp(Operator.PLUS, operand);
-                default -> throw new IllegalArgumentException("Unary operation not supported.");
-            };
-        }
-
-        throw new IllegalArgumentException("Invalid token type.");
+        return switch (token.type()) {
+            case MINUS -> new UnaryOp(Operator.MINUS, operand);
+            case PLUS -> new UnaryOp(Operator.PLUS, operand);
+            default -> throw new IllegalArgumentException("Unary operation not supported.");
+        };
     }
 
     private Expression parseGrouping() {
