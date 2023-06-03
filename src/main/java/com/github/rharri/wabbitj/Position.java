@@ -23,4 +23,14 @@
 package com.github.rharri.wabbitj;
 
 public record Position(int line, int column) {
+
+    static Position UNKNOWN = new Position(Integer.MAX_VALUE, Integer.MAX_VALUE);
+
+    public Position {
+        if (line <= 0)
+            throw new IllegalArgumentException("line must be >= 1");
+
+        if (column <= 0)
+            throw new IllegalArgumentException("column must be >= 1");
+    }
 }

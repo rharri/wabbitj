@@ -48,7 +48,7 @@ public class InterpreterTest {
 
     @Test
     public void shouldPrintIntLiteral() {
-        var intLiteral = new IntLiteral(42, 0, 0);
+        var intLiteral = new IntLiteral(42, 1, 1);
         var print = new Print(intLiteral);
         var statements = new Statements();
         statements.add(print);
@@ -64,9 +64,9 @@ public class InterpreterTest {
 
     @Test
     public void shouldPrintAdditionExpression() {
-        var intLiteral1 = new IntLiteral(2, 0, 0);
-        var intLiteral2 = new IntLiteral(3, 0, 0);
-        var binaryOp = new BinaryOp(Operator.PLUS, intLiteral1, intLiteral2, 0, 0);
+        var intLiteral1 = new IntLiteral(2, 1, 1);
+        var intLiteral2 = new IntLiteral(3, 1, 1);
+        var binaryOp = new BinaryOp(Operator.PLUS, intLiteral1, intLiteral2, 1, 1);
         var print = new Print(binaryOp);
         var statements = new Statements();
         statements.add(print);
@@ -82,9 +82,9 @@ public class InterpreterTest {
 
     @Test
     public void shouldPrintSubtractionExpression() {
-        var intLiteral1 = new IntLiteral(46, 0, 0);
-        var intLiteral2 = new IntLiteral(4, 0, 0);
-        var binaryOp = new BinaryOp(Operator.MINUS, intLiteral1, intLiteral2, 0, 0);
+        var intLiteral1 = new IntLiteral(46, 1, 1);
+        var intLiteral2 = new IntLiteral(4, 1, 1);
+        var binaryOp = new BinaryOp(Operator.MINUS, intLiteral1, intLiteral2, 1, 1);
         var print = new Print(binaryOp);
         var statements = new Statements();
         statements.add(print);
@@ -100,9 +100,9 @@ public class InterpreterTest {
 
     @Test
     public void shouldPrintMultiplicationExpression() {
-        var intLiteral1 = new IntLiteral(2, 0, 0);
-        var intLiteral2 = new IntLiteral(3, 0, 0);
-        var binaryOp = new BinaryOp(Operator.TIMES, intLiteral1, intLiteral2, 0, 0);
+        var intLiteral1 = new IntLiteral(2, 1, 1);
+        var intLiteral2 = new IntLiteral(3, 1, 1);
+        var binaryOp = new BinaryOp(Operator.TIMES, intLiteral1, intLiteral2, 1, 1);
         var print = new Print(binaryOp);
         var statements = new Statements();
         statements.add(print);
@@ -118,9 +118,9 @@ public class InterpreterTest {
 
     @Test
     public void shouldPrintDivideExpression() {
-        var intLiteral1 = new IntLiteral(6, 0, 0);
-        var intLiteral2 = new IntLiteral(2, 0, 0);
-        var binaryOp = new BinaryOp(Operator.DIVIDE, intLiteral1, intLiteral2, 0, 0);
+        var intLiteral1 = new IntLiteral(6, 1, 1);
+        var intLiteral2 = new IntLiteral(2, 1, 1);
+        var binaryOp = new BinaryOp(Operator.DIVIDE, intLiteral1, intLiteral2, 1, 1);
         var print = new Print(binaryOp);
         var statements = new Statements();
         statements.add(print);
@@ -136,7 +136,7 @@ public class InterpreterTest {
 
     @Test
     public void shouldPrintUnaryExpression() {
-        var intLiteral = new IntLiteral(5, 0, 0);
+        var intLiteral = new IntLiteral(5, 1, 1);
         var unaryOp = new UnaryOp(Operator.MINUS, intLiteral);
         var print = new Print(unaryOp);
         var statements = new Statements();
@@ -153,11 +153,11 @@ public class InterpreterTest {
 
     @Test
     public void shouldPrintTrinomialExpression() {
-        var intLiteral1 = new IntLiteral(3, 0, 0);
-        var intLiteral2 = new IntLiteral(4, 0, 0);
-        var binaryOp1 = new BinaryOp(Operator.TIMES, intLiteral1, intLiteral2, 0, 0);
-        var intLiteral3 = new IntLiteral(2, 0, 0);
-        var binaryOp2 = new BinaryOp(Operator.PLUS, intLiteral3, binaryOp1, 0, 0);
+        var intLiteral1 = new IntLiteral(3, 1, 1);
+        var intLiteral2 = new IntLiteral(4, 1, 1);
+        var binaryOp1 = new BinaryOp(Operator.TIMES, intLiteral1, intLiteral2, 1, 1);
+        var intLiteral3 = new IntLiteral(2, 1, 1);
+        var binaryOp2 = new BinaryOp(Operator.PLUS, intLiteral3, binaryOp1, 1, 1);
         var print = new Print(binaryOp2);
         var statements = new Statements();
         statements.add(print);
@@ -173,12 +173,12 @@ public class InterpreterTest {
 
     @Test
     public void shouldPrintGroupingExpression() {
-        var intLiteral1 = new IntLiteral(2, 0, 0);
-        var intLiteral2 = new IntLiteral(3, 0, 0);
-        var binaryOp1 = new BinaryOp(Operator.PLUS, intLiteral1, intLiteral2, 0, 0);
+        var intLiteral1 = new IntLiteral(2, 1, 1);
+        var intLiteral2 = new IntLiteral(3, 1, 1);
+        var binaryOp1 = new BinaryOp(Operator.PLUS, intLiteral1, intLiteral2, 1, 1);
         var grouping = new Grouping(binaryOp1);
-        var intLiteral3 = new IntLiteral(4, 0, 0);
-        var binaryOp2 = new BinaryOp(Operator.TIMES, grouping, intLiteral3, 0, 0);
+        var intLiteral3 = new IntLiteral(4, 1, 1);
+        var binaryOp2 = new BinaryOp(Operator.TIMES, grouping, intLiteral3, 1, 1);
         var print = new Print(binaryOp2);
         var statements = new Statements();
         statements.add(print);

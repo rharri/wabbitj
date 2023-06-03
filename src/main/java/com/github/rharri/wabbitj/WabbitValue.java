@@ -22,5 +22,11 @@
 
 package com.github.rharri.wabbitj;
 
+import java.util.Objects;
+
 public record WabbitValue(WabbitType wabbitType, Object javaObject) {
+
+    public WabbitValue {
+        Objects.requireNonNull(javaObject);
+    }
 }

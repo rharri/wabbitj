@@ -24,10 +24,21 @@ package com.github.rharri.wabbitj.ast;
 
 import com.github.rharri.wabbitj.NodeVisitor;
 
+import java.util.Objects;
+
 public record IntLiteral(int value, int line, int column) implements Expression, SourceLocation {
+
+    public IntLiteral {
+        if (line <= 0)
+            throw new IllegalArgumentException("line must be >= 1");
+
+        if (column <= 0)
+            throw new IllegalArgumentException("column must be >= 1");
+    }
 
     @Override
     public void accept(NodeVisitor visitor) {
+        Objects.requireNonNull(visitor);
         visitor.visitIntLiteral(this);
     }
 }

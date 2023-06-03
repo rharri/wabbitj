@@ -26,6 +26,7 @@ import com.github.rharri.wabbitj.ast.*;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Objects;
 
 public class Interpreter implements NodeVisitor {
 
@@ -33,20 +34,24 @@ public class Interpreter implements NodeVisitor {
     private final Deque<WabbitValue> stack = new ArrayDeque<>();
 
     private Interpreter(JavaRuntime runtime) {
+        assert runtime != null;
         this.runtime = runtime;
     }
 
     public static Interpreter newInstance(JavaRuntime runtime) {
+        Objects.requireNonNull(runtime);
         return new Interpreter(runtime);
     }
 
     @Override
     public void visitProgram(Program program) {
+        Objects.requireNonNull(program);
         program.statements().accept(this);
     }
 
     @Override
     public void visitStatements(Statements statements) {
+        Objects.requireNonNull(statements);
         for (AbstractSyntaxTree statement : statements.statements()) {
             statement.accept(this);
         }
@@ -54,6 +59,7 @@ public class Interpreter implements NodeVisitor {
 
     @Override
     public void visitPrint(Print print) {
+        Objects.requireNonNull(print);
         print.expression().accept(this);
         WabbitValue wabbitValue = stack.pop();
         runtime.println(wabbitValue.javaObject());
@@ -61,18 +67,22 @@ public class Interpreter implements NodeVisitor {
 
     @Override
     public void visitIntLiteral(IntLiteral intLiteral) {
+        Objects.requireNonNull(intLiteral);
         int value = intLiteral.value();
         stack.push(new WabbitValue(WabbitType.INT, value));
     }
 
     @Override
     public void visitFloatLiteral(FloatLiteral floatLiteral) {
+        Objects.requireNonNull(floatLiteral);
         float value = floatLiteral.value();
         stack.push(new WabbitValue(WabbitType.FLOAT, value));
     }
 
     @Override
     public void visitBinaryOp(BinaryOp binaryOp) {
+        Objects.requireNonNull(binaryOp);
+
         binaryOp.lhs().accept(this);
         binaryOp.rhs().accept(this);
 
@@ -85,6 +95,8 @@ public class Interpreter implements NodeVisitor {
 
     @Override
     public void visitUnaryOp(UnaryOp unaryOp) {
+        Objects.requireNonNull(unaryOp);
+
         unaryOp.operand().accept(this);
 
         WabbitValue operand = stack.pop();
@@ -95,6 +107,7 @@ public class Interpreter implements NodeVisitor {
 
     @Override
     public void visitGrouping(Grouping grouping) {
+        Objects.requireNonNull(grouping);
         grouping.expression().accept(this);
     }
 

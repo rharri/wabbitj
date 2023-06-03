@@ -34,38 +34,48 @@ public class TypeChecker implements NodeVisitor {
     private final Deque<TypeInfo> stack = new ArrayDeque<>();
 
     public TypeChecker(String filename, String programText) {
+        Objects.requireNonNull(filename);
+        Objects.requireNonNull(programText);
+
         this.filename = filename;
         this.programText = programText;
     }
 
     @Override
     public void visitProgram(Program program) {
+        Objects.requireNonNull(program);
         program.statements().accept(this);
     }
 
     @Override
     public void visitStatements(Statements statements) {
+        Objects.requireNonNull(statements);
         for (Statement statement : statements.statements())
             statement.accept(this);
     }
 
     @Override
     public void visitPrint(Print print) {
+        Objects.requireNonNull(print);
         print.expression().accept(this);
     }
 
     @Override
     public void visitIntLiteral(IntLiteral intLiteral) {
+        Objects.requireNonNull(intLiteral);
         stack.push(new TypeInfo(WabbitType.INT, intLiteral.line(), intLiteral.column()));
     }
 
     @Override
     public void visitFloatLiteral(FloatLiteral floatLiteral) {
+        Objects.requireNonNull(floatLiteral);
         stack.push(new TypeInfo(WabbitType.FLOAT, floatLiteral.line(), floatLiteral.column()));
     }
 
     @Override
     public void visitBinaryOp(BinaryOp binaryOp) {
+        Objects.requireNonNull(binaryOp);
+
         binaryOp.lhs().accept(this);
         binaryOp.rhs().accept(this);
 
@@ -101,6 +111,11 @@ public class TypeChecker implements NodeVisitor {
     }
 
     private String formatErrorMessage(String message, int line, int column) {
+        assert message != null;
+        assert !message.isEmpty() || !message.isBlank();
+        assert line >= 1;
+        assert column >= 1;
+
         String[] lines = programText.split("\n");
 
         // File 'file.wb', line 1, col 1
@@ -123,5 +138,10 @@ public class TypeChecker implements NodeVisitor {
     }
 
     private record TypeInfo(WabbitType type, int line, int column) {
+
+        private TypeInfo {
+            assert line >= 1 : "line must be >= 1";
+            assert column >= 1 : "column must be >= 1";
+        }
     }
 }

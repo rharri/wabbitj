@@ -24,10 +24,17 @@ package com.github.rharri.wabbitj.ast;
 
 import com.github.rharri.wabbitj.NodeVisitor;
 
+import java.util.Objects;
+
 public record Grouping(Expression expression) implements Expression {
+
+    public Grouping {
+        Objects.requireNonNull(expression);
+    }
 
     @Override
     public void accept(NodeVisitor visitor) {
+        Objects.requireNonNull(visitor);
         visitor.visitGrouping(this);
     }
 }

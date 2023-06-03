@@ -27,6 +27,7 @@ import com.github.rharri.wabbitj.ast.Operator;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.UnaryOperator;
 
@@ -47,26 +48,35 @@ public class JavaRuntime {
     }
 
     private JavaRuntime(PrintStream out) {
+        assert out != null;
         this.out = out;
     }
 
-    public static JavaRuntime newInstance(PrintStream printStream) {
-        return new JavaRuntime(printStream);
+    public static JavaRuntime newInstance(PrintStream out) {
+        Objects.requireNonNull(out);
+        return new JavaRuntime(out);
     }
 
     public void println(Object object) {
+        Objects.requireNonNull(object);
         out.println(object);
     }
 
     public Object binaryOp(Operator operator, Object lhs, Object rhs) {
+        Objects.requireNonNull(lhs);
+        Objects.requireNonNull(rhs);
         return binaryOperations.get(operator).apply(lhs, rhs);
     }
 
     public Object unaryOp(Operator operator, Object operand) {
+        Objects.requireNonNull(operand);
         return unaryOperations.get(operator).apply(operand);
     }
 
     private static Object add(Object lhs, Object rhs) {
+        assert lhs != null;
+        assert rhs != null;
+
         // Assume right hand side is of the same type
         // Wabbit does not do implicit conversions
         // This is guaranteed by the type checker?
@@ -81,6 +91,9 @@ public class JavaRuntime {
     }
 
     private static Object subtract(Object lhs, Object rhs) {
+        assert lhs != null;
+        assert rhs != null;
+
         // Assume right hand side is of the same type
         // Wabbit does not do implicit conversions
         // This is guaranteed by the type checker?
@@ -95,6 +108,9 @@ public class JavaRuntime {
     }
 
     private static Object multiply(Object lhs, Object rhs) {
+        assert lhs != null;
+        assert rhs != null;
+
         // Assume right hand side is of the same type
         // Wabbit does not do implicit conversions
         // This is guaranteed by the type checker?
@@ -109,6 +125,9 @@ public class JavaRuntime {
     }
 
     private static Object divide(Object lhs, Object rhs) {
+        assert lhs != null;
+        assert rhs != null;
+
         // Assume right hand side is of the same type
         // Wabbit does not do implicit conversions
         // This is guaranteed by the type checker?
@@ -123,6 +142,8 @@ public class JavaRuntime {
     }
 
     private static Object minus(Object operand) {
+        assert operand != null;
+
         // Assume right hand side is of the same type
         // Wabbit does not do implicit conversions
         // This is guaranteed by the type checker?
@@ -137,6 +158,8 @@ public class JavaRuntime {
     }
 
     private static Object plus(Object operand) {
+        assert operand != null;
+
         // Assume right hand side is of the same type
         // Wabbit does not do implicit conversions
         // This is guaranteed by the type checker?

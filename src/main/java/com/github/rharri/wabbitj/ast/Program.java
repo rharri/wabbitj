@@ -24,9 +24,13 @@ package com.github.rharri.wabbitj.ast;
 
 import com.github.rharri.wabbitj.NodeVisitor;
 
+import java.util.Objects;
+
 public record Program(Statements statements) implements AbstractSyntaxTree {
 
     public Program(Statements statements) {
+        Objects.requireNonNull(statements);
+
         Statements copy = new Statements();
         for (Statement statement : statements.statements())
             copy.add(statement);
@@ -35,6 +39,7 @@ public record Program(Statements statements) implements AbstractSyntaxTree {
 
     @Override
     public void accept(NodeVisitor visitor) {
+        Objects.requireNonNull(visitor);
         visitor.visitProgram(this);
     }
 }

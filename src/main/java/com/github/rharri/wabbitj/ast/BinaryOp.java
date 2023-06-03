@@ -24,11 +24,25 @@ package com.github.rharri.wabbitj.ast;
 
 import com.github.rharri.wabbitj.NodeVisitor;
 
+import java.util.Objects;
+
 public record BinaryOp(Operator operator, Expression lhs, Expression rhs, int line, int column)
         implements Expression, SourceLocation {
 
+    public BinaryOp {
+        Objects.requireNonNull(lhs);
+        Objects.requireNonNull(rhs);
+
+        if (line <= 0)
+            throw new IllegalArgumentException("line must be >= 1");
+
+        if (column <= 0)
+            throw new IllegalArgumentException("column must be >= 1");
+    }
+
     @Override
     public void accept(NodeVisitor visitor) {
+        Objects.requireNonNull(visitor);
         visitor.visitBinaryOp(this);
     }
 }

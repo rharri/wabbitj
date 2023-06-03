@@ -48,6 +48,10 @@ public class Tokenizer {
     private int lastNewLineIndex;
 
     private Tokenizer(String programText) {
+        assert programText != null;
+        assert !programText.isEmpty();
+        assert !programText.isBlank();
+
         this.programText = programText;
         this.programTextChars = programText.toCharArray();
         this.index = 0;
@@ -58,18 +62,29 @@ public class Tokenizer {
     }
 
     public static Tokenizer newInstance(String programText) {
+        Objects.requireNonNull(programText);
+
+        if (programText.isEmpty() || programText.isBlank())
+            throw new IllegalArgumentException("programText cannot be empty or blank.");
+
         return new Tokenizer(programText);
     }
 
     private boolean peek(String token) {
+        assert token != null;
+        assert !token.isEmpty();
         return slice(index, index + token.length()).equals(token);
     }
 
     private boolean tryNext(Predicate<Character> predicate) {
+        assert predicate != null;
         return predicate.test(programText.charAt(index));
     }
 
     private String slice(int startIndex, int endIndex) {
+        assert startIndex >= 0;
+        assert endIndex >= 0;
+
         if (endIndex > programText.length())
             endIndex = programText.length() - 1;
 
@@ -77,6 +92,9 @@ public class Tokenizer {
     }
 
     private FindEndResult findEnd(int start, String endToken) {
+        assert start >= 0;
+        assert !endToken.isEmpty();
+
         int endTokenIndex = programText.indexOf(endToken, start);
 
         if (endTokenIndex == -1) { // Handle endTokens that do not exist
@@ -105,11 +123,18 @@ public class Tokenizer {
                                   Predicate<Character> predicate,
                                   BiFunction<Integer, Predicate<Character>, Integer> finder) {
 
+        assert start >= 0;
+        assert predicate != null;
+        assert finder != null;
+
         int endTokenIndex = finder.apply(start, predicate);
         return new FindEndResult(start, endTokenIndex, slice(start, endTokenIndex));
     }
 
     private void addToken(TokenType type, int start, String representation) {
+        assert start >= 0;
+        assert !representation.isEmpty();
+
         if (lastNewLineIndex > 0)
             column = start - lastNewLineIndex;
         else
@@ -124,6 +149,9 @@ public class Tokenizer {
     }
 
     private int find(int start, Predicate<Character> predicate) {
+        assert start >= 0;
+        assert predicate != null;
+
         int endIndex = start;
         int index = start;
 
@@ -139,6 +167,8 @@ public class Tokenizer {
     }
 
     private boolean isDecimalInExpression(int start) {
+        assert start >= 0;
+
         int decimalIndex = programText.indexOf(".", start);
 
         if (decimalIndex < 0)
@@ -222,5 +252,18 @@ public class Tokenizer {
     }
 
     private record FindEndResult(int startIndex, int endIndex, String found) {
+
+        public FindEndResult {
+            if (startIndex < 0)
+                throw new IllegalArgumentException("startIndex must be >= 0");
+
+            if (endIndex < 0)
+                throw new IllegalArgumentException("endIndex must be >= 0");
+
+            Objects.requireNonNull(found);
+
+            if (found.isEmpty() || found.isBlank())
+                throw new IllegalArgumentException("found cannot be empty or blank");
+        }
     }
 }

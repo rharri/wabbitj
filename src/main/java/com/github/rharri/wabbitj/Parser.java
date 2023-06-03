@@ -26,7 +26,7 @@ import com.github.rharri.wabbitj.ast.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 public class Parser {
 
@@ -34,6 +34,8 @@ public class Parser {
     private int index;
 
     private Parser(List<Token> tokens) {
+        assert tokens != null;
+
         this.tokens.addAll(tokens);
         this.index = 0;
     }
@@ -70,6 +72,7 @@ public class Parser {
     }
 
     public static Parser newInstance(List<Token> tokens) {
+        Objects.requireNonNull(tokens);
         return new Parser(tokens);
     }
 
