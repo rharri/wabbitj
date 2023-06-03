@@ -6,7 +6,7 @@
 
   <groupId>com.github.rharri.wabbitj</groupId>
   <artifactId>wabbitj</artifactId>
-  <version>0.11.4-beta</version>
+  <version>0.11.5-beta</version>
   <packaging>jar</packaging>
 
   <name>wabbitj</name>
@@ -18,17 +18,22 @@
     <maven.compiler.target>17</maven.compiler.target>
   </properties>
 
-  <dependencies>
-    <dependency>
-      <groupId>info.picocli</groupId>
-      <artifactId>picocli</artifactId>
-      <version>4.7.3</version>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <version>5.9.3</version>
-      <scope>test</scope>
+    <dependencies>
+        <dependency>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
+            <version>3.35.0</version>
+        </dependency>
+        <dependency>
+            <groupId>info.picocli</groupId>
+            <artifactId>picocli</artifactId>
+            <version>4.7.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.9.3</version>
+            <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.assertj</groupId>
@@ -60,13 +65,38 @@
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.11.0</version>
-          <configuration>
-            <showWarnings>true</showWarnings>
-            <failOnWarning>true</failOnWarning>
-            <compilerArgs>
-              <arg>-Xlint:all</arg>
-            </compilerArgs>
-          </configuration>
+            <configuration>
+                <!-- Note that -J options are only passed through if fork is set to true. -->
+                <fork>true</fork>
+                <showWarnings>true</showWarnings>
+                <failOnWarning>true</failOnWarning>
+                <compilerArgs>
+                    <arg>-Xlint:all</arg>
+                    <arg>-XDcompilePolicy=simple</arg>
+                    <arg>-Xplugin:ErrorProne -Xep:ReturnMissingNullable:ERROR -Xep:RemoveUnusedImports:ERROR</arg>
+                    <!-- The declarations in source file's and previously compiled class files are analyzed by
+                    javac in a 'compilation' environment that is distinct from the 'runtime' environment used to
+                    execute javac itself. If javac is invoked from the command line, options can be passed to the
+                    underlying runtime by prefixing the option with -J. -->
+                    <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
+                    <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
+                    <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
+                    <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
+                    <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
+                    <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+                    <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
+                    <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
+                    <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
+                    <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
+                </compilerArgs>
+                <annotationProcessorPaths>
+                    <path>
+                        <groupId>com.google.errorprone</groupId>
+                        <artifactId>error_prone_core</artifactId>
+                        <version>2.19.1</version>
+                    </path>
+                </annotationProcessorPaths>
+            </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>

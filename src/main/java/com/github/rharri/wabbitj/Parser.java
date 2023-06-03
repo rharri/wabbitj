@@ -23,6 +23,8 @@
 package com.github.rharri.wabbitj;
 
 import com.github.rharri.wabbitj.ast.*;
+import com.github.rharri.wabbitj.tokenizer.Token;
+import com.github.rharri.wabbitj.tokenizer.TokenType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +35,8 @@ public class Parser {
     private final List<Token> tokens = new ArrayList<>();
     private int index;
 
-    private Parser(List<Token> tokens) {
-        assert tokens != null;
+    public Parser(List<Token> tokens) {
+        Objects.requireNonNull(tokens);
 
         this.tokens.addAll(tokens);
         this.index = 0;
@@ -46,35 +48,24 @@ public class Parser {
         if (token.type().equals(type)) {
             index += 1;
             return token;
-        } else {
-            throw new IllegalArgumentException("Expected " + type + "." + " Got " + token.type() + ".");
         }
+
+        throw new IllegalArgumentException("Expected " + type + "." + " Got " + token.type() + ".");
     }
 
     private Token tryExpect(TokenType type) {
-        if (peek(type))
-            return expect(type);
-        else
-            return Token.UNKNOWN;
+        return peek(type) ? expect(type) : Token.NO_SUCH_TOKEN;
     }
 
     private Token tryExpect(TokenType type1, TokenType type2) {
         assert type1 != type2;
 
         Token token = tryExpect(type1);
-        if (token != Token.UNKNOWN)
-            return token;
-
-        return tryExpect(type2);
+        return !Objects.equals(token, Token.NO_SUCH_TOKEN) ? token : tryExpect(type2);
     }
 
     private boolean peek(TokenType type) {
         return tokens.get(index).type().equals(type);
-    }
-
-    public static Parser newInstance(List<Token> tokens) {
-        Objects.requireNonNull(tokens);
-        return new Parser(tokens);
     }
 
     public AbstractSyntaxTree parse() {
@@ -136,23 +127,24 @@ public class Parser {
         while (true) {
             Token token = tryExpect(TokenType.PLUS, TokenType.MINUS);
 
-            if (token.isUnknown())
+            if (Objects.equals(token, Token.NO_SUCH_TOKEN))
                 break;
 
             Expression rhs = parseMulTerm();
 
-            switch (token.type()) {
-                case PLUS -> lhs = new BinaryOp(Operator.PLUS,
+            lhs = switch (token.type()) {
+                case PLUS -> new BinaryOp(Operator.PLUS,
                         lhs,
                         rhs,
                         token.position().line(),
                         token.position().column());
-                case MINUS -> lhs = new BinaryOp(Operator.MINUS,
+                case MINUS -> new BinaryOp(Operator.MINUS,
                         lhs,
                         rhs,
                         token.position().line(),
                         token.position().column());
-            }
+                default -> throw new IllegalArgumentException("Binary operation not supported.");
+            };
         }
         return lhs;
     }
@@ -163,23 +155,24 @@ public class Parser {
         while (true) {
             Token token = tryExpect(TokenType.TIMES, TokenType.DIVIDE);
 
-            if (token.isUnknown())
+            if (Objects.equals(token, Token.NO_SUCH_TOKEN))
                 break;
 
             Expression rhs = parseFactor();
 
-            switch (token.type()) {
-                case TIMES -> lhs = new BinaryOp(Operator.TIMES,
+            lhs = switch (token.type()) {
+                case TIMES -> new BinaryOp(Operator.TIMES,
                         lhs,
                         rhs,
                         token.position().line(),
                         token.position().column());
-                case DIVIDE -> lhs = new BinaryOp(Operator.DIVIDE,
+                case DIVIDE -> new BinaryOp(Operator.DIVIDE,
                         lhs,
                         rhs,
                         token.position().line(),
                         token.position().column());
-            }
+                default -> throw new IllegalArgumentException("Binary operation not supported.");
+            };
         }
         return lhs;
     }
@@ -187,8 +180,8 @@ public class Parser {
     private Expression parseUnary() {
         Token token = tryExpect(TokenType.MINUS, TokenType.PLUS);
 
-        if (token.isUnknown())
-            throw new IllegalArgumentException("Expected MINUS or PLUS, got UNKNOWN.");
+        if (Objects.equals(token, Token.NO_SUCH_TOKEN))
+            throw new IllegalArgumentException("Expected MINUS or PLUS.");
 
         Expression operand = parseExpression();
 

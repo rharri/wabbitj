@@ -20,20 +20,8 @@
  * SOFTWARE.
  */
 
-package com.github.rharri.wabbitj;
+package com.github.rharri.wabbitj.tokenizer;
 
-import java.util.Objects;
-
-public record Token(TokenType type, String representation, Position position) {
-
-    static Token UNKNOWN = new Token(TokenType.UNEXPECTED, "", Position.UNKNOWN);
-
-    public Token {
-        Objects.requireNonNull(representation);
-        Objects.requireNonNull(position);
-    }
-
-    public boolean isUnknown() {
-        return this == UNKNOWN;
-    }
+public enum TokenType {
+    COMMENT, PRINT, INTEGER, FLOAT, PLUS, MINUS, DIVIDE, TIMES, LPAREN, RPAREN, SEMI, NAME, EOF, NO_SUCH_TOKEN
 }

@@ -23,6 +23,10 @@
 package com.github.rharri.wabbitj;
 
 import com.github.rharri.wabbitj.ast.AbstractSyntaxTree;
+import com.github.rharri.wabbitj.interpreter.Interpreter;
+import com.github.rharri.wabbitj.interpreter.JavaRuntime;
+import com.github.rharri.wabbitj.tokenizer.Token;
+import com.github.rharri.wabbitj.tokenizer.Tokenizer;
 import picocli.CommandLine;
 
 import java.io.File;
@@ -46,11 +50,11 @@ public class WabbitJ implements Callable<Integer> {
             try {
                 String programText = Files.readString(file.toPath(), StandardCharsets.UTF_8);
 
-                Tokenizer tokenizer = Tokenizer.newInstance(programText);
+                Tokenizer tokenizer = new Tokenizer(programText);
                 tokenizer.tokenize();
                 List<Token> tokens = tokenizer.getTokens();
 
-                Parser parser = Parser.newInstance(tokens);
+                Parser parser = new Parser(tokens);
                 AbstractSyntaxTree ast = parser.parse();
 
                 TypeChecker typeChecker = new TypeChecker(file.getName(), programText);
@@ -64,7 +68,7 @@ public class WabbitJ implements Callable<Integer> {
                     return 1;
                 }
 
-                Interpreter interpreter = Interpreter.newInstance(JavaRuntime.newInstance(System.out));
+                Interpreter interpreter = new Interpreter(new JavaRuntime(System.out));
                 ast.accept(interpreter);
             } catch (IOException e) {
                 System.out.println("File cannot be read.");

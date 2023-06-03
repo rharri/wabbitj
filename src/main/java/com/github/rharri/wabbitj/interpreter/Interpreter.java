@@ -20,8 +20,9 @@
  * SOFTWARE.
  */
 
-package com.github.rharri.wabbitj;
+package com.github.rharri.wabbitj.interpreter;
 
+import com.github.rharri.wabbitj.NodeVisitor;
 import com.github.rharri.wabbitj.ast.*;
 
 import java.util.ArrayDeque;
@@ -33,14 +34,9 @@ public class Interpreter implements NodeVisitor {
     private final JavaRuntime runtime;
     private final Deque<WabbitValue> stack = new ArrayDeque<>();
 
-    private Interpreter(JavaRuntime runtime) {
-        assert runtime != null;
-        this.runtime = runtime;
-    }
-
-    public static Interpreter newInstance(JavaRuntime runtime) {
+    public Interpreter(JavaRuntime runtime) {
         Objects.requireNonNull(runtime);
-        return new Interpreter(runtime);
+        this.runtime = runtime;
     }
 
     @Override

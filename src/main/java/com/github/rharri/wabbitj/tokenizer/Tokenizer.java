@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.github.rharri.wabbitj;
+package com.github.rharri.wabbitj.tokenizer;
 
 import java.util.*;
 import java.util.function.BiFunction;
@@ -36,8 +36,12 @@ public class Tokenizer {
 
     private static final Predicate<Character> isDigit = Character::isDigit;
     private static final Predicate<Character> isAlpha = Character::isAlphabetic;
-    private static final Predicate<Character> isDecimalPoint = ch -> ch == '.';
+    private static final Predicate<Character> isDecimalPoint = Tokenizer::isDecimalPoint;
     private static final Predicate<Character> isFloatingPoint = isDigit.or(isDecimalPoint);
+
+    private static boolean isDecimalPoint(Character ch) {
+        return ch == '.';
+    }
 
     private final String programText;
     private final char[] programTextChars;
@@ -47,10 +51,11 @@ public class Tokenizer {
     private final List<Token> tokens;
     private int lastNewLineIndex;
 
-    private Tokenizer(String programText) {
-        assert programText != null;
-        assert !programText.isEmpty();
-        assert !programText.isBlank();
+    public Tokenizer(String programText) {
+        Objects.requireNonNull(programText);
+
+        if (programText.isEmpty() || programText.isBlank())
+            throw new IllegalArgumentException("programText cannot be empty or blank.");
 
         this.programText = programText;
         this.programTextChars = programText.toCharArray();
@@ -61,13 +66,10 @@ public class Tokenizer {
         this.lastNewLineIndex = 0;
     }
 
-    public static Tokenizer newInstance(String programText) {
-        Objects.requireNonNull(programText);
-
-        if (programText.isEmpty() || programText.isBlank())
-            throw new IllegalArgumentException("programText cannot be empty or blank.");
-
-        return new Tokenizer(programText);
+    public static List<Token> tokenize(String programText) {
+        Tokenizer tokenizer = new Tokenizer(programText);
+        tokenizer.tokenize();
+        return tokenizer.getTokens();
     }
 
     private boolean peek(String token) {
@@ -189,7 +191,7 @@ public class Tokenizer {
                 addToken(TokenType.COMMENT, endToken.startIndex, endToken.found);
                 index = endToken.endIndex;
                 // Handle newlines within multiline comments
-                lineNumber += endToken.found.chars().filter(ch -> ch == '\n').count();
+                lineNumber += (int) endToken.found.chars().filter(ch -> ch == '\n').count();
             } else if (peek("//")) {
                 FindEndResult endToken = findEnd(index, "\n");
                 addToken(TokenType.COMMENT, endToken.startIndex, endToken.found);

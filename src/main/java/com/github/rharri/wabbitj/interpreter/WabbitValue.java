@@ -20,17 +20,13 @@
  * SOFTWARE.
  */
 
-package com.github.rharri.wabbitj;
+package com.github.rharri.wabbitj.interpreter;
 
-public record Position(int line, int column) {
+import java.util.Objects;
 
-    static Position UNKNOWN = new Position(Integer.MAX_VALUE, Integer.MAX_VALUE);
+public record WabbitValue(WabbitType wabbitType, Object javaObject) {
 
-    public Position {
-        if (line <= 0)
-            throw new IllegalArgumentException("line must be >= 1.");
-
-        if (column <= 0)
-            throw new IllegalArgumentException("column must be >= 1.");
+    public WabbitValue {
+        Objects.requireNonNull(javaObject);
     }
 }

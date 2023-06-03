@@ -20,13 +20,16 @@
  * SOFTWARE.
  */
 
-package com.github.rharri.wabbitj;
+package com.github.rharri.wabbitj.tokenizer;
 
 import java.util.Objects;
 
-public record WabbitValue(WabbitType wabbitType, Object javaObject) {
+public record Token(TokenType type, String representation, Position position) {
 
-    public WabbitValue {
-        Objects.requireNonNull(javaObject);
+    public static Token NO_SUCH_TOKEN = new Token(TokenType.NO_SUCH_TOKEN, "", Position.NO_SUCH_POSITION);
+
+    public Token {
+        Objects.requireNonNull(representation);
+        Objects.requireNonNull(position);
     }
 }

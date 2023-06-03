@@ -23,6 +23,8 @@
 package com.github.rharri.wabbitj;
 
 import com.github.rharri.wabbitj.ast.*;
+import com.github.rharri.wabbitj.interpreter.Interpreter;
+import com.github.rharri.wabbitj.interpreter.JavaRuntime;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -33,17 +35,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class InterpreterTest {
 
-    private record Tuple(OutputStream out, PrintStream printableStream) {
+    private record OutputPrintable(OutputStream out, PrintStream printable) {
+
+        private OutputPrintable {
+            assert out != null;
+            assert printable != null;
+        }
     }
 
-    private Tuple printableByteArrayStream() {
+    private OutputPrintable printableByteArrayStream() {
         // An OutputStream that "writes" bytes to a byte[]
         var streamToByteArray = new ByteArrayOutputStream();
 
         // Add printing functionality to the byte[] output stream
-        var printStream =  new PrintStream(streamToByteArray);
+        var printStream = new PrintStream(streamToByteArray);
 
-        return new Tuple(streamToByteArray, printStream);
+        return new OutputPrintable(streamToByteArray, printStream);
     }
 
     @Test
@@ -54,12 +61,12 @@ public class InterpreterTest {
         statements.add(print);
         var program = new Program(statements);
 
-        Tuple streamTuple = printableByteArrayStream();
-        var runtime = JavaRuntime.newInstance(streamTuple.printableStream);
-        program.accept(Interpreter.newInstance(runtime));
+        OutputPrintable streamOutputPrintable = printableByteArrayStream();
+        var runtime = new JavaRuntime(streamOutputPrintable.printable);
+        program.accept(new Interpreter(runtime));
 
         // Assert on the underlying byte[] stream
-        assertEquals("42", streamTuple.out.toString().trim());
+        assertEquals("42", streamOutputPrintable.out.toString().trim());
     }
 
     @Test
@@ -72,12 +79,12 @@ public class InterpreterTest {
         statements.add(print);
         var program = new Program(statements);
 
-        Tuple streamTuple = printableByteArrayStream();
-        var runtime = JavaRuntime.newInstance(streamTuple.printableStream);
-        program.accept(Interpreter.newInstance(runtime));
+        OutputPrintable streamOutputPrintable = printableByteArrayStream();
+        var runtime = new JavaRuntime(streamOutputPrintable.printable);
+        program.accept(new Interpreter(runtime));
 
         // Assert on the underlying byte[] stream
-        assertEquals("5", streamTuple.out.toString().trim());
+        assertEquals("5", streamOutputPrintable.out.toString().trim());
     }
 
     @Test
@@ -90,12 +97,12 @@ public class InterpreterTest {
         statements.add(print);
         var program = new Program(statements);
 
-        Tuple streamTuple = printableByteArrayStream();
-        var runtime = JavaRuntime.newInstance(streamTuple.printableStream);
-        program.accept(Interpreter.newInstance(runtime));
+        OutputPrintable streamOutputPrintable = printableByteArrayStream();
+        var runtime = new JavaRuntime(streamOutputPrintable.printable);
+        program.accept(new Interpreter(runtime));
 
         // Assert on the underlying byte[] stream
-        assertEquals("42", streamTuple.out.toString().trim());
+        assertEquals("42", streamOutputPrintable.out.toString().trim());
     }
 
     @Test
@@ -108,12 +115,12 @@ public class InterpreterTest {
         statements.add(print);
         var program = new Program(statements);
 
-        Tuple streamTuple = printableByteArrayStream();
-        var runtime = JavaRuntime.newInstance(streamTuple.printableStream);
-        program.accept(Interpreter.newInstance(runtime));
+        OutputPrintable streamOutputPrintable = printableByteArrayStream();
+        var runtime = new JavaRuntime(streamOutputPrintable.printable);
+        program.accept(new Interpreter(runtime));
 
         // Assert on the underlying byte[] stream
-        assertEquals("6", streamTuple.out.toString().trim());
+        assertEquals("6", streamOutputPrintable.out.toString().trim());
     }
 
     @Test
@@ -126,12 +133,12 @@ public class InterpreterTest {
         statements.add(print);
         var program = new Program(statements);
 
-        Tuple streamTuple = printableByteArrayStream();
-        var runtime = JavaRuntime.newInstance(streamTuple.printableStream);
-        program.accept(Interpreter.newInstance(runtime));
+        OutputPrintable streamOutputPrintable = printableByteArrayStream();
+        var runtime = new JavaRuntime(streamOutputPrintable.printable);
+        program.accept(new Interpreter(runtime));
 
         // Assert on the underlying byte[] stream
-        assertEquals("3", streamTuple.out.toString().trim());
+        assertEquals("3", streamOutputPrintable.out.toString().trim());
     }
 
     @Test
@@ -143,12 +150,12 @@ public class InterpreterTest {
         statements.add(print);
         var program = new Program(statements);
 
-        Tuple streamTuple = printableByteArrayStream();
-        var runtime = JavaRuntime.newInstance(streamTuple.printableStream);
-        program.accept(Interpreter.newInstance(runtime));
+        OutputPrintable streamOutputPrintable = printableByteArrayStream();
+        var runtime = new JavaRuntime(streamOutputPrintable.printable);
+        program.accept(new Interpreter(runtime));
 
         // Assert on the underlying byte[] stream
-        assertEquals("-5", streamTuple.out.toString().trim());
+        assertEquals("-5", streamOutputPrintable.out.toString().trim());
     }
 
     @Test
@@ -163,12 +170,12 @@ public class InterpreterTest {
         statements.add(print);
         var program = new Program(statements);
 
-        Tuple streamTuple = printableByteArrayStream();
-        var runtime = JavaRuntime.newInstance(streamTuple.printableStream);
-        program.accept(Interpreter.newInstance(runtime));
+        OutputPrintable streamOutputPrintable = printableByteArrayStream();
+        var runtime = new JavaRuntime(streamOutputPrintable.printable);
+        program.accept(new Interpreter(runtime));
 
         // Assert on the underlying byte[] stream
-        assertEquals("14", streamTuple.out.toString().trim());
+        assertEquals("14", streamOutputPrintable.out.toString().trim());
     }
 
     @Test
@@ -184,11 +191,11 @@ public class InterpreterTest {
         statements.add(print);
         var program = new Program(statements);
 
-        Tuple streamTuple = printableByteArrayStream();
-        var runtime = JavaRuntime.newInstance(streamTuple.printableStream);
-        program.accept(Interpreter.newInstance(runtime));
+        OutputPrintable streamOutputPrintable = printableByteArrayStream();
+        var runtime = new JavaRuntime(streamOutputPrintable.printable);
+        program.accept(new Interpreter(runtime));
 
         // Assert on the underlying byte[] stream
-        assertEquals("20", streamTuple.out.toString().trim());
+        assertEquals("20", streamOutputPrintable.out.toString().trim());
     }
 }

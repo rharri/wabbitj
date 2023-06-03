@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.github.rharri.wabbitj;
+package com.github.rharri.wabbitj.interpreter;
 
 public enum WabbitType {
     ANY, INT, FLOAT

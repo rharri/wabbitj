@@ -20,8 +20,17 @@
  * SOFTWARE.
  */
 
-package com.github.rharri.wabbitj;
+package com.github.rharri.wabbitj.tokenizer;
 
-public enum TokenType {
-    COMMENT, PRINT, INTEGER, FLOAT, PLUS, MINUS, DIVIDE, TIMES, LPAREN, RPAREN, SEMI, NAME, EOF, UNEXPECTED
+public record Position(int line, int column) {
+
+    public static Position NO_SUCH_POSITION = new Position(Integer.MAX_VALUE, Integer.MAX_VALUE);
+
+    public Position {
+        if (line <= 0)
+            throw new IllegalArgumentException("line must be >= 1.");
+
+        if (column <= 0)
+            throw new IllegalArgumentException("column must be >= 1.");
+    }
 }

@@ -22,6 +22,10 @@
 
 package com.github.rharri.wabbitj;
 
+import com.github.rharri.wabbitj.tokenizer.Position;
+import com.github.rharri.wabbitj.tokenizer.Token;
+import com.github.rharri.wabbitj.tokenizer.TokenType;
+import com.github.rharri.wabbitj.tokenizer.Tokenizer;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -37,9 +41,7 @@ public class TokenizerTest {
         var semicolon = new Token(TokenType.SEMI, ";", new Position(1, 9));
         var endOfFile = new Token(TokenType.EOF, "EOF", new Position(1, 10));
 
-        var tokenizer = Tokenizer.newInstance("print 42;");
-        tokenizer.tokenize();
-        List<Token> tokens = tokenizer.getTokens();
+        List<Token> tokens = Tokenizer.tokenize("print 42;");
 
         var expected = List.of(print, intLiteral, semicolon, endOfFile);
 
@@ -71,9 +73,7 @@ public class TokenizerTest {
                 print 42;
                 """;
 
-        var tokenizer = Tokenizer.newInstance(programText);
-        tokenizer.tokenize();
-        List<Token> tokens = tokenizer.getTokens();
+        List<Token> tokens = Tokenizer.tokenize(programText);
 
         var expected = List.of(multilineComment, print, intLiteral, semicolon, endOfFile);
 
@@ -99,9 +99,7 @@ public class TokenizerTest {
                 print 34;
                 """;
 
-        var tokenizer = Tokenizer.newInstance(programText);
-        tokenizer.tokenize();
-        List<Token> tokens = tokenizer.getTokens();
+        List<Token> tokens = Tokenizer.tokenize(programText);
 
         var expected = List.of(print, intLiteral, semicolon, comment1, comment2, print2, intLiteral2, semicolon2, endOfFile);
 
@@ -127,9 +125,7 @@ public class TokenizerTest {
                 print .15;
                 """;
 
-        var tokenizer = Tokenizer.newInstance(programText);
-        tokenizer.tokenize();
-        List<Token> tokens = tokenizer.getTokens();
+        List<Token> tokens = Tokenizer.tokenize(programText);
 
         var expected = List.of(
                 print,
@@ -157,9 +153,7 @@ public class TokenizerTest {
 
         var programText = "print 42; // comment";
 
-        var tokenizer = Tokenizer.newInstance(programText);
-        tokenizer.tokenize();
-        List<Token> tokens = tokenizer.getTokens();
+        List<Token> tokens = Tokenizer.tokenize(programText);
 
         var expected = List.of(
                 print,
@@ -183,9 +177,7 @@ public class TokenizerTest {
 
         var programText = "print 2 + 3;";
 
-        var tokenizer = Tokenizer.newInstance(programText);
-        tokenizer.tokenize();
-        List<Token> tokens = tokenizer.getTokens();
+        List<Token> tokens = Tokenizer.tokenize(programText);
 
         var expected = List.of(
                 print,
@@ -210,9 +202,7 @@ public class TokenizerTest {
 
         var programText = "print 46 - 4;";
 
-        var tokenizer = Tokenizer.newInstance(programText);
-        tokenizer.tokenize();
-        List<Token> tokens = tokenizer.getTokens();
+        List<Token> tokens = Tokenizer.tokenize(programText);
 
         var expected = List.of(
                 print,
@@ -237,9 +227,7 @@ public class TokenizerTest {
 
         var programText = "print 2 * 3;";
 
-        var tokenizer = Tokenizer.newInstance(programText);
-        tokenizer.tokenize();
-        List<Token> tokens = tokenizer.getTokens();
+        List<Token> tokens = Tokenizer.tokenize(programText);
 
         var expected = List.of(
                 print,
@@ -264,9 +252,7 @@ public class TokenizerTest {
 
         var programText = "print 6 / 2;";
 
-        var tokenizer = Tokenizer.newInstance(programText);
-        tokenizer.tokenize();
-        List<Token> tokens = tokenizer.getTokens();
+        List<Token> tokens = Tokenizer.tokenize(programText);
 
         var expected = List.of(
                 print,
@@ -290,9 +276,7 @@ public class TokenizerTest {
 
         var programText = "print -5;";
 
-        var tokenizer = Tokenizer.newInstance(programText);
-        tokenizer.tokenize();
-        List<Token> tokens = tokenizer.getTokens();
+        List<Token> tokens = Tokenizer.tokenize(programText);
 
         var expected = List.of(
                 print,
@@ -318,9 +302,7 @@ public class TokenizerTest {
 
         var programText = "print 2 + 3 * 4;";
 
-        var tokenizer = Tokenizer.newInstance(programText);
-        tokenizer.tokenize();
-        List<Token> tokens = tokenizer.getTokens();
+        List<Token> tokens = Tokenizer.tokenize(programText);
 
         var expected = List.of(
                 print,
@@ -351,9 +333,7 @@ public class TokenizerTest {
 
         var programText = "print (2 + 3) * 4;";
 
-        var tokenizer = Tokenizer.newInstance(programText);
-        tokenizer.tokenize();
-        List<Token> tokens = tokenizer.getTokens();
+        List<Token> tokens = Tokenizer.tokenize(programText);
 
         var expected = List.of(
                 print,
@@ -382,9 +362,7 @@ public class TokenizerTest {
 
         var programText = "print 2 + 3.5;";
 
-        var tokenizer = Tokenizer.newInstance(programText);
-        tokenizer.tokenize();
-        List<Token> tokens = tokenizer.getTokens();
+        List<Token> tokens = Tokenizer.tokenize(programText);
 
         var expected = List.of(
                 print,

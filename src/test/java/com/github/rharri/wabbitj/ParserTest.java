@@ -22,6 +22,12 @@
 
 package com.github.rharri.wabbitj;
 
+import com.github.rharri.wabbitj.interpreter.Interpreter;
+import com.github.rharri.wabbitj.interpreter.JavaRuntime;
+import com.github.rharri.wabbitj.tokenizer.Position;
+import com.github.rharri.wabbitj.tokenizer.Token;
+import com.github.rharri.wabbitj.tokenizer.TokenType;
+import com.github.rharri.wabbitj.tokenizer.Tokenizer;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
@@ -42,7 +48,7 @@ public class ParserTest {
         var printableByteArrayStream = new PrintStream(streamToByteArray);
 
         // Use a printable byte[] stream instead of "standard" output stream
-        return JavaRuntime.newInstance(printableByteArrayStream);
+        return new JavaRuntime(printableByteArrayStream);
     }
 
     @Test
@@ -54,12 +60,12 @@ public class ParserTest {
 
         var tokens = List.of(print, intLiteral, semicolon, endOfFile);
 
-        var parser = Parser.newInstance(tokens);
+        var parser = new Parser(tokens);
         var ast = parser.parse();
 
         var runtime = runtimeWithoutStandardOut();
 
-        var interpreter = Mockito.spy(Interpreter.newInstance(runtime));
+        var interpreter = Mockito.spy(new Interpreter(runtime));
 
         ast.accept(interpreter);
 
@@ -79,12 +85,12 @@ public class ParserTest {
 
         var tokens = List.of(print, floatLiteral, semicolon, endOfFile);
 
-        var parser = Parser.newInstance(tokens);
+        var parser = new Parser(tokens);
         var ast = parser.parse();
 
         var runtime = runtimeWithoutStandardOut();
 
-        var interpreter = Mockito.spy(Interpreter.newInstance(runtime));
+        var interpreter = Mockito.spy(new Interpreter(runtime));
 
         ast.accept(interpreter);
 
@@ -113,12 +119,12 @@ public class ParserTest {
                 endOfFile
         );
 
-        var parser = Parser.newInstance(tokens);
+        var parser = new Parser(tokens);
         var ast = parser.parse();
 
         var runtime = runtimeWithoutStandardOut();
 
-        var interpreter = Mockito.spy(Interpreter.newInstance(runtime));
+        var interpreter = Mockito.spy(new Interpreter(runtime));
 
         ast.accept(interpreter);
 
@@ -132,16 +138,16 @@ public class ParserTest {
 
     @Test
     public void shouldParsePrintSubtractionExpression() {
-        var tokenizer = Tokenizer.newInstance("print 46 - 4;");
+        var tokenizer = new Tokenizer("print 46 - 4;");
         tokenizer.tokenize();
         var tokens = tokenizer.getTokens();
 
-        var parser = Parser.newInstance(tokens);
+        var parser = new Parser(tokens);
         var ast = parser.parse();
 
         var runtime = runtimeWithoutStandardOut();
 
-        var interpreter = Mockito.spy(Interpreter.newInstance(runtime));
+        var interpreter = Mockito.spy(new Interpreter(runtime));
 
         ast.accept(interpreter);
 
@@ -155,16 +161,16 @@ public class ParserTest {
 
     @Test
     public void shouldParsePrintMultiplicationExpression() {
-        var tokenizer = Tokenizer.newInstance("print 2 * 3;");
+        var tokenizer = new Tokenizer("print 2 * 3;");
         tokenizer.tokenize();
         var tokens = tokenizer.getTokens();
 
-        var parser = Parser.newInstance(tokens);
+        var parser = new Parser(tokens);
         var ast = parser.parse();
 
         var runtime = runtimeWithoutStandardOut();
 
-        var interpreter = Mockito.spy(Interpreter.newInstance(runtime));
+        var interpreter = Mockito.spy(new Interpreter(runtime));
 
         ast.accept(interpreter);
 
@@ -178,16 +184,16 @@ public class ParserTest {
 
     @Test
     public void shouldParsePrintDivisionExpression() {
-        var tokenizer = Tokenizer.newInstance("print 6 / 2;");
+        var tokenizer = new Tokenizer("print 6 / 2;");
         tokenizer.tokenize();
         var tokens = tokenizer.getTokens();
 
-        var parser = Parser.newInstance(tokens);
+        var parser = new Parser(tokens);
         var ast = parser.parse();
 
         var runtime = runtimeWithoutStandardOut();
 
-        var interpreter = Mockito.spy(Interpreter.newInstance(runtime));
+        var interpreter = Mockito.spy(new Interpreter(runtime));
 
         ast.accept(interpreter);
 
@@ -201,16 +207,16 @@ public class ParserTest {
 
     @Test
     public void shouldParsePrintUnaryExpression() {
-        var tokenizer = Tokenizer.newInstance("print -5;");
+        var tokenizer = new Tokenizer("print -5;");
         tokenizer.tokenize();
         var tokens = tokenizer.getTokens();
 
-        var parser = Parser.newInstance(tokens);
+        var parser = new Parser(tokens);
         var ast = parser.parse();
 
         var runtime = runtimeWithoutStandardOut();
 
-        var interpreter = Mockito.spy(Interpreter.newInstance(runtime));
+        var interpreter = Mockito.spy(new Interpreter(runtime));
 
         ast.accept(interpreter);
 
@@ -224,16 +230,16 @@ public class ParserTest {
 
     @Test
     public void shouldParsePrintTrinomialExpression() {
-        var tokenizer = Tokenizer.newInstance("print 2 + 3 * 4;");
+        var tokenizer = new Tokenizer("print 2 + 3 * 4;");
         tokenizer.tokenize();
         var tokens = tokenizer.getTokens();
 
-        var parser = Parser.newInstance(tokens);
+        var parser = new Parser(tokens);
         var ast = parser.parse();
 
         var runtime = runtimeWithoutStandardOut();
 
-        var interpreter = Mockito.spy(Interpreter.newInstance(runtime));
+        var interpreter = Mockito.spy(new Interpreter(runtime));
 
         ast.accept(interpreter);
 
@@ -249,16 +255,16 @@ public class ParserTest {
 
     @Test
     public void shouldParsePrintGrouping() {
-        var tokenizer = Tokenizer.newInstance("print (2 + 3) * 4;");
+        var tokenizer = new Tokenizer("print (2 + 3) * 4;");
         tokenizer.tokenize();
         var tokens = tokenizer.getTokens();
 
-        var parser = Parser.newInstance(tokens);
+        var parser = new Parser(tokens);
         var ast = parser.parse();
 
         var runtime = runtimeWithoutStandardOut();
 
-        var interpreter = Mockito.spy(Interpreter.newInstance(runtime));
+        var interpreter = Mockito.spy(new Interpreter(runtime));
 
         ast.accept(interpreter);
 
@@ -274,16 +280,16 @@ public class ParserTest {
 
     @Test
     public void shouldParsePolynomial() {
-        var tokenizer = Tokenizer.newInstance("print 6 + 7 + 8 + 9 + 10;");
+        var tokenizer = new Tokenizer("print 6 + 7 + 8 + 9 + 10;");
         tokenizer.tokenize();
         var tokens = tokenizer.getTokens();
 
-        var parser = Parser.newInstance(tokens);
+        var parser = new Parser(tokens);
         var ast = parser.parse();
 
         var runtime = runtimeWithoutStandardOut();
 
-        var interpreter = Mockito.spy(Interpreter.newInstance(runtime));
+        var interpreter = Mockito.spy(new Interpreter(runtime));
 
         ast.accept(interpreter);
 

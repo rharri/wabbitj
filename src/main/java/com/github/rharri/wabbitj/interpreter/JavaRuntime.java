@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.github.rharri.wabbitj;
+package com.github.rharri.wabbitj.interpreter;
 
 import com.github.rharri.wabbitj.ast.Operator;
 
@@ -47,14 +47,9 @@ public class JavaRuntime {
         unaryOperations.put(Operator.PLUS, JavaRuntime::plus);
     }
 
-    private JavaRuntime(PrintStream out) {
-        assert out != null;
-        this.out = out;
-    }
-
-    public static JavaRuntime newInstance(PrintStream out) {
+    public JavaRuntime(PrintStream out) {
         Objects.requireNonNull(out);
-        return new JavaRuntime(out);
+        this.out = out;
     }
 
     public void println(Object object) {

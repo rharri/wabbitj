@@ -23,6 +23,7 @@
 package com.github.rharri.wabbitj;
 
 import com.github.rharri.wabbitj.ast.*;
+import com.github.rharri.wabbitj.interpreter.WabbitType;
 
 import java.util.*;
 
@@ -116,7 +117,7 @@ public class TypeChecker implements NodeVisitor {
         assert line >= 1;
         assert column >= 1;
 
-        String[] lines = programText.split("\n");
+        String[] lines = programText.split("\n", -1);
 
         // File 'file.wb', line 1, col 1
         String header = String.format("File '%s', line %s, col %s", filename, line, column);
@@ -140,6 +141,7 @@ public class TypeChecker implements NodeVisitor {
     private record TypeInfo(WabbitType type, int line, int column) {
 
         private TypeInfo {
+            assert type != null;
             assert line >= 1 : "line must be >= 1.";
             assert column >= 1 : "column must be >= 1.";
         }
