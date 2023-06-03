@@ -26,14 +26,14 @@ import java.util.Objects;
 
 public record Token(TokenType type, String representation, Position position) {
 
-    static Token UNEXPECTED = new Token(TokenType.UNEXPECTED, "", Position.UNKNOWN);
+    static Token UNKNOWN = new Token(TokenType.UNEXPECTED, "", Position.UNKNOWN);
 
     public Token {
         Objects.requireNonNull(representation);
         Objects.requireNonNull(position);
     }
 
-    public boolean isUnexpected() {
-        return this == UNEXPECTED;
+    public boolean isUnknown() {
+        return this == UNKNOWN;
     }
 }

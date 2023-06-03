@@ -83,7 +83,7 @@ public class TypeChecker implements NodeVisitor {
         TypeInfo lhs = stack.pop();
 
         if (lhs.type != rhs.type) {
-            String message = String.format("Type Error: unsupported operand type(s) for %s: '%s' and '%s'",
+            String message = String.format("Type Error: unsupported operand type(s) for %s: '%s' and '%s'.",
                     binaryOp.operator(),
                     lhs.type,
                     rhs.type);
@@ -140,8 +140,8 @@ public class TypeChecker implements NodeVisitor {
     private record TypeInfo(WabbitType type, int line, int column) {
 
         private TypeInfo {
-            assert line >= 1 : "line must be >= 1";
-            assert column >= 1 : "column must be >= 1";
+            assert line >= 1 : "line must be >= 1.";
+            assert column >= 1 : "column must be >= 1.";
         }
     }
 }

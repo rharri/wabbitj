@@ -34,10 +34,10 @@ public record BinaryOp(Operator operator, Expression lhs, Expression rhs, int li
         Objects.requireNonNull(rhs);
 
         if (line <= 0)
-            throw new IllegalArgumentException("line must be >= 1");
+            throw new IllegalArgumentException("line must be >= 1.");
 
         if (column <= 0)
-            throw new IllegalArgumentException("column must be >= 1");
+            throw new IllegalArgumentException("column must be >= 1.");
     }
 
     @Override

@@ -28,9 +28,9 @@ public record Position(int line, int column) {
 
     public Position {
         if (line <= 0)
-            throw new IllegalArgumentException("line must be >= 1");
+            throw new IllegalArgumentException("line must be >= 1.");
 
         if (column <= 0)
-            throw new IllegalArgumentException("column must be >= 1");
+            throw new IllegalArgumentException("column must be >= 1.");
     }
 }

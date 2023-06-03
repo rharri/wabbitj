@@ -111,7 +111,7 @@ public class Parser {
             return parseGrouping();
 
         Token token = tokens.get(index);
-        throw new IllegalArgumentException("Parser error: Unexpected token " + token.type());
+        throw new IllegalArgumentException("Parser error: Unexpected token " + token.type() + ".");
     }
 
     private Expression parseIntLiteral() {

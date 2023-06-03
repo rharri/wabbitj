@@ -30,10 +30,10 @@ public record IntLiteral(int value, int line, int column) implements Expression,
 
     public IntLiteral {
         if (line <= 0)
-            throw new IllegalArgumentException("line must be >= 1");
+            throw new IllegalArgumentException("line must be >= 1.");
 
         if (column <= 0)
-            throw new IllegalArgumentException("column must be >= 1");
+            throw new IllegalArgumentException("column must be >= 1.");
     }
 
     @Override

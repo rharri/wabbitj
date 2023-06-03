@@ -255,15 +255,15 @@ public class Tokenizer {
 
         public FindEndResult {
             if (startIndex < 0)
-                throw new IllegalArgumentException("startIndex must be >= 0");
+                throw new IllegalArgumentException("startIndex must be >= 0.");
 
             if (endIndex < 0)
-                throw new IllegalArgumentException("endIndex must be >= 0");
+                throw new IllegalArgumentException("endIndex must be >= 0.");
 
             Objects.requireNonNull(found);
 
             if (found.isEmpty() || found.isBlank())
-                throw new IllegalArgumentException("found cannot be empty or blank");
+                throw new IllegalArgumentException("found cannot be empty or blank.");
         }
     }
 }
