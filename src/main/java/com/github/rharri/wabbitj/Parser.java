@@ -25,6 +25,7 @@ package com.github.rharri.wabbitj;
 import com.github.rharri.wabbitj.ast.*;
 import com.github.rharri.wabbitj.tokenizer.Token;
 import com.github.rharri.wabbitj.tokenizer.TokenType;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,15 +54,15 @@ public class Parser {
         throw new IllegalArgumentException("Expected " + type + "." + " Got " + token.type() + ".");
     }
 
-    private Token tryExpect(TokenType type) {
-        return peek(type) ? expect(type) : Token.NO_SUCH_TOKEN;
+    private @Nullable Token tryExpect(TokenType type) {
+        return peek(type) ? expect(type) : null;
     }
 
-    private Token tryExpect(TokenType type1, TokenType type2) {
+    private @Nullable Token tryExpect(TokenType type1, TokenType type2) {
         assert type1 != type2;
 
         Token token = tryExpect(type1);
-        return !Objects.equals(token, Token.NO_SUCH_TOKEN) ? token : tryExpect(type2);
+        return token != null ? token : tryExpect(type2);
     }
 
     private boolean peek(TokenType type) {
@@ -127,7 +128,7 @@ public class Parser {
         while (true) {
             Token token = tryExpect(TokenType.PLUS, TokenType.MINUS);
 
-            if (Objects.equals(token, Token.NO_SUCH_TOKEN))
+            if (token == null)
                 break;
 
             Expression rhs = parseMulTerm();
@@ -155,7 +156,7 @@ public class Parser {
         while (true) {
             Token token = tryExpect(TokenType.TIMES, TokenType.DIVIDE);
 
-            if (Objects.equals(token, Token.NO_SUCH_TOKEN))
+            if (token == null)
                 break;
 
             Expression rhs = parseFactor();
@@ -180,8 +181,7 @@ public class Parser {
     private Expression parseUnary() {
         Token token = tryExpect(TokenType.MINUS, TokenType.PLUS);
 
-        if (Objects.equals(token, Token.NO_SUCH_TOKEN))
-            throw new IllegalArgumentException("Expected MINUS or PLUS.");
+        Objects.requireNonNull(token, "Expected MINUS or PLUS.");
 
         Expression operand = parseExpression();
 

@@ -26,8 +26,6 @@ import java.util.Objects;
 
 public record Token(TokenType type, String representation, Position position) {
 
-    public static Token NO_SUCH_TOKEN = new Token(TokenType.NO_SUCH_TOKEN, "", Position.NO_SUCH_POSITION);
-
     public Token {
         Objects.requireNonNull(representation);
         Objects.requireNonNull(position);
